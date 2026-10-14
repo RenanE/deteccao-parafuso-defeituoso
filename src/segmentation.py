@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 from skimage.measure import label, regionprops
 from skimage.transform import rotate
+from scipy.ndimage import binary_fill_holes
 
 def binarizar_otsu(
     imagem_cinza: np.ndarray, 
@@ -18,14 +19,25 @@ def binarizar_otsu(
     )
     return limiar, mascara
 
+
+def preencher_furos(mascara_binaria: np.ndarray) -> np.ndarray:
+    """
+    Preenche buracos e lacunas internas na máscara binária causados por 
+    reflexos metálicos, preservando intactas as bordas externas da peça.
+    """
+    mascara_bool = mascara_binaria > 0
+    mascara_preenchida = binary_fill_holes(mascara_bool)
+    return (mascara_preenchida * 255).astype(np.uint8)
+
 def aplicar_morfologia(
     mascara_binaria: np.ndarray,
     tamanho_abertura: int = 3,
     tamanho_fechamento: int = 11,
+    preencher_lacunas: bool = True,
 ) -> np.ndarray:
     """
-    Aplica Abertura para eliminar pequenos ruídos do fundo e Fechamento para 
-    preencher falhas de reflexo metálico na superfície do parafuso.
+    Aplica Abertura para eliminar ruídos do fundo, Fechamento e 
+    preenchimento topológico de furos.
     """
     kernel_abertura = cv2.getStructuringElement(
         cv2.MORPH_ELLIPSE, (tamanho_abertura, tamanho_abertura)
@@ -34,15 +46,20 @@ def aplicar_morfologia(
         cv2.MORPH_ELLIPSE, (tamanho_fechamento, tamanho_fechamento)
     )
     
-    # 1. Abertura: Elimina pequenas sujeiras ou ruídos isolados no fundo
+    # 1. Abertura: Elimina sujeiras isoladas do fundo
     mascara_limpa = cv2.morphologyEx(
         mascara_binaria, cv2.MORPH_OPEN, kernel_abertura
     )
     
-    # 2. Fechamento: Preenche lacunas/buracos causados pelo reflexo do brilho metálico
+    # 2. Fechamento: Preenche pequenas falhas na borda
     mascara_fechada = cv2.morphologyEx(
         mascara_limpa, cv2.MORPH_CLOSE, kernel_fechamento
     )
+    
+    # 3. Preenchimento de furos internos (solução para o reflexo no corpo metálico)
+    if preencher_lacunas:
+        mascara_fechada = preencher_furos(mascara_fechada)
+        
     return mascara_fechada
 
 def extrair_maior_componente_e_roi(
