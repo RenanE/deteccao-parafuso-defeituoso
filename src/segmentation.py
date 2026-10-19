@@ -67,44 +67,76 @@ def extrair_maior_componente_e_roi(
     mascara_binaria: np.ndarray,
     alinhar_eixo: bool = True,
 ) -> tuple[np.ndarray, np.ndarray, tuple]:
-    """
-    Identifica a maior componente conexa (o parafuso), calcula a orientação e 
-    retorna a ROI recortada e alinhada.
+    """Identifica a ROI do parafuso, rotaciona para a posição horizontal padronizada
+
+    (cabeça para a esquerda) e retorna o recorte da imagem e da máscara.
     """
     rotulada = label(mascara_binaria > 0)
     regioes = regionprops(rotulada)
-    
+
     if not regioes:
         raise ValueError("Nenhuma componente conexa encontrada na máscara.")
-        
-    # Seleciona a maior região por área (o parafuso)
+
     maior_regiao = max(regioes, key=lambda r: r.area)
-    
+
     if alinhar_eixo:
-        # Ângulo do eixo principal em graus
-        angulo_graus = np.degrees(maior_regiao.orientation)
-        
-        # Rotaciona a imagem e a máscara para alinhar o parafuso
-        imagem_rot = rotate(imagem_cinza, angulo_graus, resize=True)
-        mascara_rot = rotate(mascara_binaria, angulo_graus, resize=True)
-        
-        # Converte de volta para uint8 no intervalo [0, 255]
-        imagem_rot = (imagem_rot * 255).astype(np.uint8)
-        mascara_rot = (mascara_rot * 255).astype(np.uint8)
-        
+        # 1. Ângulo da skimage é em relação ao eixo VERTICAL (Y).
+        # Para alinhar na HORIZONTAL (X), subtraímos de 90 graus.
+        orientacao_rad = maior_regiao.orientation
+        angulo_horizontal = 90.0 - np.degrees(orientacao_rad)
+
+        # 2. Rotaciona a imagem e a máscara para a horizontal
+        # cval/mode mantêm o tom claro de fundo ao expandir as bordas
+        tom_fundo = (
+            float(np.median(imagem_cinza[mascara_binaria == 0])) / 255.0
+        )
+        imagem_rot = rotate(
+            imagem_cinza, angulo_horizontal, resize=True, cval=tom_fundo
+        )
+        mascara_rot = rotate(
+            mascara_binaria, angulo_horizontal, resize=True, cval=0
+        )
+
+        # Converte de volta para uint8 (0..255)
+        imagem_rot = (
+            (imagem_rot * 255).astype(np.uint8)
+            if imagem_rot.max() <= 1.0
+            else imagem_rot.astype(np.uint8)
+        )
+        mascara_rot = (
+            (mascara_rot * 255).astype(np.uint8)
+            if mascara_rot.max() <= 1.0
+            else mascara_rot.astype(np.uint8)
+        )
+
         # Recalcula a caixa delimitadora (bbox) na imagem alinhada
         rotulada_rot = label(mascara_rot > 0)
         regioes_rot = regionprops(rotulada_rot)
-        
+
         if regioes_rot:
-            maior_regiao = max(regioes_rot, key=lambda r: r.area)
-            minr, minc, maxr, maxc = maior_regiao.bbox
+            maior_regiao_rot = max(regioes_rot, key=lambda r: r.area)
+            minr, minc, maxr, maxc = maior_regiao_rot.bbox
             roi_imagem = imagem_rot[minr:maxr, minc:maxc]
             roi_mascara = mascara_rot[minr:maxr, minc:maxc]
+
+            # 3. Orientação Padrão: Garante que a cabeça (parte mais larga) fique na ESQUERDA
+            largura_colunas = np.sum(roi_mascara > 0, axis=0)
+            meio = len(largura_colunas) // 2
+            area_esquerda = np.sum(largura_colunas[:meio])
+            area_direita = np.sum(largura_colunas[meio:])
+
+            # Se a direita for mais larga que a esquerda, gira 180 graus
+            if area_direita > area_esquerda:
+                roi_imagem = np.rot90(roi_imagem, 2)
+                roi_mascara = np.rot90(roi_mascara, 2)
+
             return roi_imagem, roi_mascara, (minr, minc, maxr, maxc)
-            
-    # Recorte simples sem rotação (caso alinhar_eixo=False ou falha na rotação)
+
+    # Caso sem alinhamento
     minr, minc, maxr, maxc = maior_regiao.bbox
-    roi_imagem = imagem_cinza[minr:maxr, minc:maxc]
-    roi_mascara = mascara_binaria[minr:maxr, minc:maxc]
-    return roi_imagem, roi_mascara, (minr, minc, maxr, maxc)
+    return (
+        imagem_cinza[minr:maxr, minc:maxc],
+        mascara_binaria[minr:maxr, minc:maxc],
+        (minr, minc, maxr, maxc),
+    )
+
