@@ -183,17 +183,6 @@ def extrair_atributos_geometricos(roi_mascara: np.ndarray) -> np.ndarray:
     """Extrai atributos geométricos e morfológicos da máscara binária
 
     alinhada da ROI calculados em sua escala original (antes do resize).
-
-    Parameters
-    ----------
-    roi_mascara : np.ndarray
-        Máscara binária recortada e alinhada na resolução original.
-
-    Returns
-    -------
-    np.ndarray
-        Vetor 1D com [area, perimetro, solidez, excentricidade, extent,
-        razao_aspecto].
     """
     # Trabalha diretamente com a máscara na escala original (sem cv2.resize)
     mascara_bool = roi_mascara > 0
