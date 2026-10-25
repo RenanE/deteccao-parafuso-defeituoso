@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from skimage.feature import hog
+from skimage.measure import label, regionprops
 
 
 def extrair_hog(
@@ -123,3 +124,101 @@ def extrair_gabor(
         return vetor_caracteristicas, imagens_magnitude
 
     return vetor_caracteristicas
+
+
+def extrair_bordas(
+    roi_imagem: np.ndarray,
+    roi_mascara: np.ndarray = None,
+    threshold1: int = 50,
+    threshold2: int = 150,
+    visualize: bool = False,
+) -> tuple[np.ndarray, np.ndarray] | np.ndarray:
+    """Extrai mapa de bordas com Canny e gradientes Sobel, retornando
+
+    estatísticas de densidade de bordas e energia de gradiente.
+    """
+    roi_red = cv2.resize(roi_imagem, (384, 128), interpolation=cv2.INTER_AREA)
+    mascara_red = None
+
+    if roi_mascara is not None:
+        mascara_red = (
+            cv2.resize(roi_mascara, (384, 128), interpolation=cv2.INTER_NEAREST)
+            > 0
+        )
+
+    # 1. Bordas com Canny
+    bordas_canny = cv2.Canny(roi_red, threshold1, threshold2)
+
+    # 2. Gradientes direcionais com Sobel
+    sobel_x = cv2.Sobel(roi_red, cv2.CV_32F, 1, 0, ksize=3)
+    sobel_y = cv2.Sobel(roi_red, cv2.CV_32F, 0, 1, ksize=3)
+    magnitude_sobel = cv2.magnitude(sobel_x, sobel_y)
+
+    if mascara_red is not None:
+        bordas_canny = bordas_canny * mascara_red
+        magnitude_sobel = magnitude_sobel * mascara_red
+
+    # Estatísticas numéricas
+    if mascara_red is not None and np.any(mascara_red):
+        area_peca = np.sum(mascara_red)
+        densidade_canny = float(np.sum(bordas_canny > 0)) / float(area_peca)
+        sobel_medio = float(np.mean(magnitude_sobel[mascara_red]))
+        sobel_std = float(np.std(magnitude_sobel[mascara_red]))
+    else:
+        densidade_canny = float(np.mean(bordas_canny > 0))
+        sobel_medio = float(np.mean(magnitude_sobel))
+        sobel_std = float(np.std(magnitude_sobel))
+
+    vetor_caracteristicas = np.array(
+        [densidade_canny, sobel_medio, sobel_std], dtype=np.float32
+    )
+
+    if visualize:
+        return vetor_caracteristicas, bordas_canny
+
+    return vetor_caracteristicas
+
+
+def extrair_atributos_geometricos(roi_mascara: np.ndarray) -> np.ndarray:
+    """Extrai atributos geométricos e morfológicos da máscara binária
+
+    alinhada da ROI calculados em sua escala original (antes do resize).
+
+    Parameters
+    ----------
+    roi_mascara : np.ndarray
+        Máscara binária recortada e alinhada na resolução original.
+
+    Returns
+    -------
+    np.ndarray
+        Vetor 1D com [area, perimetro, solidez, excentricidade, extent,
+        razao_aspecto].
+    """
+    # Trabalha diretamente com a máscara na escala original (sem cv2.resize)
+    mascara_bool = roi_mascara > 0
+    rotulada = label(mascara_bool)
+    regioes = regionprops(rotulada)
+
+    if not regioes:
+        return np.zeros(6, dtype=np.float32)
+
+    maior_regiao = max(regioes, key=lambda r: r.area)
+
+    # Extrai métricas na proporção física real da ROI
+    area = float(maior_regiao.area)
+    perimetro = float(maior_regiao.perimeter)
+    solidez = float(maior_regiao.solidity)
+    excentricidade = float(maior_regiao.eccentricity)
+    extent = float(maior_regiao.extent)
+
+    # Bounding box real
+    minr, minc, maxr, maxc = maior_regiao.bbox
+    altura = maxr - minr
+    largura = maxc - minc
+    razao_aspecto = float(largura) / float(altura) if altura > 0 else 0.0
+
+    return np.array(
+        [area, perimetro, solidez, excentricidade, extent, razao_aspecto],
+        dtype=np.float32,
+    )
