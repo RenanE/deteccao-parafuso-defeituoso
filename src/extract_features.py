@@ -13,8 +13,11 @@ def processar_imagem(
     caminho_img: Path,
     banco_gabor: list[np.ndarray]
 ) -> tuple[np.ndarray, bool]:
-    """Aplica o pipeline completo da Milestone 2 (pré-processamento/ROI) e extrai o vetor unificado de características.
     """
+    Aplica o pipeline completo da Milestone 2 (pré-processamento/ROI) e extrai o vetor unificado de características.
+    """
+    
+    # Lê o arquivo em bytes preservando caminhos com acentos/caracteres especiais no Windows
     dados_img = np.fromfile(str(caminho_img), dtype=np.uint8)
     img_bgr = cv2.imdecode(dados_img, cv2.IMREAD_COLOR)
 
