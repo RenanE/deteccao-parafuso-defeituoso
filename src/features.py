@@ -134,7 +134,6 @@ def extrair_bordas(
     visualize: bool = False,
 ) -> tuple[np.ndarray, np.ndarray] | np.ndarray:
     """Extrai mapa de bordas com Canny e gradientes Sobel, retornando
-
     estatísticas de densidade de bordas e energia de gradiente.
     """
     roi_red = cv2.resize(roi_imagem, (384, 128), interpolation=cv2.INTER_AREA)
@@ -181,7 +180,6 @@ def extrair_bordas(
 
 def extrair_atributos_geometricos(roi_mascara: np.ndarray) -> np.ndarray:
     """Extrai atributos geométricos e morfológicos da máscara binária
-
     alinhada da ROI calculados em sua escala original (antes do resize).
     """
     # Trabalha diretamente com a máscara na escala original (sem cv2.resize)
@@ -211,3 +209,54 @@ def extrair_atributos_geometricos(roi_mascara: np.ndarray) -> np.ndarray:
         [area, perimetro, solidez, excentricidade, extent, razao_aspecto],
         dtype=np.float32,
     )
+
+def extrair_todas_caracteristicas(
+    roi_clahe: np.ndarray,
+    roi_mascara: np.ndarray,
+    banco_gabor: list[np.ndarray] = None,
+) -> np.ndarray:
+    """Concatena todas as características extraídas em um único vetor 1D:
+    1. HoG (estrutura de gradientes locais)
+    2. Filtros de Gabor (estatísticas de magnitude da textura da rosca)
+    3. Bordas (densidade Canny, média e desvio Sobel)
+    4. Atributos Geométricos (área, perímetro, solidez, excentricidade, extent, razão de aspecto)
+    """
+    if banco_gabor is None:
+        banco_gabor = criar_banco_gabor(
+            orientations=4,
+            lambdas=[8.0, 12.0, 16.0]
+        )
+
+    # 1. HoG
+    vetor_hog = extrair_hog(
+        roi_clahe,
+        orientations=9,
+        pixels_per_cell=(8, 8),
+        cells_per_block=(2, 2),
+        visualize=False,
+    )
+
+    # 2. Gabor (com aplicação da máscara de fundo)
+    vetor_gabor = extrair_gabor(
+        roi_clahe,
+        roi_mascara=roi_mascara,
+        kernels=banco_gabor,
+        visualize=False
+    )
+
+    # 3. Bordas (Canny + Sobel)
+    vetor_bordas = extrair_bordas(
+        roi_clahe,
+        roi_mascara=roi_mascara,
+        visualize=False
+    )
+
+    # 4. Atributos Geométricos (calculados na resolução original da máscara)
+    vetor_geom = extrair_atributos_geometricos(roi_mascara)
+
+    # Concatenação final em um único vetor 1D
+    vetor_completo = np.hstack(
+        [vetor_hog, vetor_gabor, vetor_bordas, vetor_geom]
+    ).astype(np.float32)
+
+    return vetor_completo
