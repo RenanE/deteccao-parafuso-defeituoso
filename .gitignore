@@ -1,6 +1,7 @@
 # Pastas de dados pesados e modelos
 data/
 models/
+results/
 
 # Aquivos de cache e ambientes virtuais
 __pycache__/
