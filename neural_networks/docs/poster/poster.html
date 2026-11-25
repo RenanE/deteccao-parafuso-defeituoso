@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pôster A3: Inspeção de Parafusos Defeituosos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Pôster A3 retrato (297 x 420 mm), tema único claro para impressão. */
+@page { size: 297mm 420mm; margin: 0; }
+:root {
+  --paper: #ffffff; --ink: #1b222b; --muted: #55606d; --line: #d5dae0;
+  --steel: #2f5d86; --steel-dark: #1d3d5c; --steel-soft: #e6eef6; --rust: #b5482f; --rust-soft: #f7e6e0; --ok: #2f7a45;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", Arial, sans-serif;
+  --mono: "IBM Plex Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 297mm; height: 420mm; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 10pt; line-height: 1.38; }
+.poster { width: 297mm; height: 420mm; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
+header { background: var(--steel-dark); color: #ffffff; padding: 9mm 16mm 8mm; display: grid; grid-template-columns: 1fr auto; gap: 10mm; align-items: end; }
+header .eyebrow { font-family: var(--mono); font-size: 10pt; letter-spacing: .14em; text-transform: uppercase; color: #a9c6e3; }
+header h1 { font-family: var(--display); font-weight: 500; font-size: 44pt; line-height: 1.02; margin-top: 3mm; letter-spacing: -.01em; }
+header p.sub { font-size: 13pt; color: #d4e2ef; margin-top: 2.5mm; max-width: 175mm; }
+header .authors { font-family: var(--mono); font-size: 10.5pt; color: #d4e2ef; text-align: right; line-height: 1.7; }
+main { padding: 8mm 16mm 0; display: grid; grid-template-columns: 1fr 1fr 1fr; align-content: start; gap: 6mm 9mm; min-height: 0; }
+.span2 { grid-column: span 2; }
+.feats4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2mm; }
+.block.conclusion { display: grid; grid-template-columns: 1fr 2fr; gap: 9mm; align-items: center; border-top: 1px solid var(--line); padding-top: 5mm; }
+.conclusion .big { grid-template-columns: 1fr 1fr; }
+.conclusion .stat .num { font-size: 22pt; }
+.block { display: flex; flex-direction: column; gap: 3mm; min-width: 0; }
+.wide { grid-column: 1 / -1; }
+h2 { font-family: var(--display); font-weight: 500; font-size: 19pt; line-height: 1.1; color: var(--steel-dark); display: flex; gap: 3mm; align-items: baseline; }
+h2 .n { font-family: var(--mono); font-size: 11pt; color: var(--rust); }
+h3 { font-family: var(--display); font-weight: 500; font-size: 13pt; }
+p, li { font-size: 10pt; }
+ul { padding-left: 4.5mm; display: flex; flex-direction: column; gap: 1.6mm; }
+img { display: block; width: 100%; height: auto; }
+.cap { font-size: 8.8pt; color: var(--muted); }
+.split { display: flex; height: 9mm; font-family: var(--mono); font-size: 8.6pt; border: 1px solid var(--line); }
+.split div { display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden; }
+.split .a { flex: 256; background: var(--steel-soft); }
+.split .b { flex: 64; border-left: 1px solid var(--line); }
+.split .c { flex: 160; background: var(--rust-soft); border-left: 1px solid var(--line); }
+.feats { display: grid; grid-template-columns: 1fr 1fr; gap: 2mm; }
+.feat { border: 1px solid var(--line); padding: 2mm 3mm; }
+.feat .k { font-family: var(--mono); font-size: 8pt; color: var(--steel); letter-spacing: .08em; }
+.feat p { font-size: 9.4pt; }
+.big { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+.stat { border: 1px solid var(--line); border-left: 3mm solid var(--ok); padding: 3mm 4mm; }
+.stat.bad { border-left-color: var(--rust); }
+.stat .num { font-family: var(--display); font-size: 28pt; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .lbl { font-size: 9.2pt; color: var(--muted); margin-top: 1.5mm; }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 9.6pt; }
+th { font-family: var(--mono); font-weight: 400; font-size: 7.8pt; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); text-align: right; padding: 1.4mm 1.6mm; border-bottom: 1px solid var(--ink); }
+th:first-child, td:first-child { text-align: left; }
+td { text-align: right; padding: 1.3mm 1.6mm; border-bottom: 1px solid var(--line); }
+tr.win td { background: var(--steel-soft); }
+.tag { font-family: var(--mono); font-size: 7pt; color: var(--steel); border: 1px solid var(--steel); padding: 0 1.2mm; margin-left: 1.2mm; }
+.note { background: var(--rust-soft); padding: 3mm 4mm; border-left: 2mm solid var(--rust); }
+.heat { display: grid; grid-template-columns: 2.2fr 1fr; gap: 9mm; align-items: center; }
+footer { padding: 5mm 16mm 7mm; display: flex; justify-content: space-between; gap: 8mm; font-size: 8.2pt; color: var(--muted); border-top: 1px solid var(--line); margin-top: 6mm; }
+</style>
+</head>
+<body>
+<div class="poster">
+<header>
+  <div>
+    <div class="eyebrow">Visão Computacional · Detecção de anomalias industriais</div>
+    <h1>Inspeção de Parafusos Defeituosos</h1>
+    <p class="sub">Visão clássica ou rede neural? Sete detectores treinados só com parafusos bons, comparados pelo número de defeitos que deixam passar.</p>
+  </div>
+  <div class="authors">Felipe Bertella<br>Gabriela Costa<br>Renan Bianchi</div>
+</header>
+
+<main>
+  <section class="block">
+    <h2><span class="n">01</span>Problema e dados</h2>
+    <p>Numa linha de produção quase todas as peças são boas e cada defeito é diferente. Os modelos aprendem só o que é normal (One-Class) e precisam reconhecer defeitos que nunca viram.</p>
+    <img src="../relatorio/img/categories_roi.png" alt="">
+    <p class="cap">MVTec AD, categoria screw. Treino: 320 boas. Teste: 41 boas e 119 defeituosas em 5 tipos.</p>
+    <div class="split"><div class="a">256 boas: ajuste</div><div class="b">64</div><div class="c">160 teste</div></div>
+    <p class="cap">As 64 boas reservadas só definem o limiar (quantil de 95%: meta de rejeitar 5% das boas). O teste foi usado uma única vez, com tudo congelado.</p>
+  </section>
+
+  <section class="block span2">
+    <h2><span class="n">02</span>Visão clássica: segmentar, alinhar, descrever</h2>
+    <img src="../relatorio/img/pipeline_steps.png" alt="">
+    <p class="cap">Escala de cinza, CLAHE, binarização de Otsu, morfologia, ROI alinhada (cabeça à esquerda) e HOG.</p>
+    <div class="feats4">
+      <div class="feat"><span class="k">HOG 8x8</span><p>25.380 atributos de forma</p></div>
+      <div class="feat"><span class="k">GABOR</span><p>24 de textura da rosca</p></div>
+      <div class="feat"><span class="k">BORDAS</span><p>3 de rugosidade</p></div>
+      <div class="feat"><span class="k">GEOMETRIA</span><p>6 da silhueta</p></div>
+    </div>
+    <p>O vetor de 25.413 atributos, reduzido por PCA para 25 ou 43 dimensões, alimenta cinco detectores: One-Class SVM, k-NN, Mahalanobis, Isolation Forest e LOF. Hiperparâmetros escolhidos em divisões internas das 256 boas.</p>
+  </section>
+
+  <section class="block">
+    <h2><span class="n">03</span>Redes neurais</h2>
+    <h3>PatchCore</h3>
+    <p>Uma Wide ResNet-50 pré-treinada no ImageNet descreve cada pequena região da imagem. As regiões dos 256 parafusos bons formam um banco de memória (20.070 vetores). O score é a maior distância de uma região até a região boa mais parecida.</p>
+    <h3>Autoencoder convolucional</h3>
+    <p>Treinado do zero para reconstruir parafusos bons; o erro de reconstrução vira o score.</p>
+  </section>
+
+  <section class="block span2">
+    <h2><span class="n">04</span>Onde está o defeito</h2>
+    <img src="../relatorio/img/patchcore_heatmaps.png" alt="">
+    <p class="cap">Mapas do PatchCore: a região clara cai sobre o defeito. Descritores globais resumem a peça inteira, e a variação normal (fase da rosca, reflexos) pesa mais que um risco de poucos pixels.</p>
+  </section>
+
+  <section class="block">
+    <h2><span class="n">05</span>Resultado no teste</h2>
+    <table>
+      <thead><tr><th>Modelo</th><th>FN /119</th><th>FP /41</th><th>Recall</th><th>AUC</th></tr></thead>
+      <tbody>
+        <tr class="win"><td>PatchCore<span class="tag">RN</span></td><td>13</td><td>3</td><td>89,1%</td><td>0,964</td></tr>
+        <tr><td>k-NN</td><td>94</td><td>5</td><td>21,0%</td><td>0,651</td></tr>
+        <tr><td>Isolation Forest</td><td>100</td><td>3</td><td>16,0%</td><td>0,634</td></tr>
+        <tr><td>LOF</td><td>104</td><td>3</td><td>12,6%</td><td>0,622</td></tr>
+        <tr><td>One-Class SVM</td><td>110</td><td>1</td><td>7,6%</td><td>0,438</td></tr>
+        <tr><td>Autoencoder<span class="tag">RN</span></td><td>117</td><td>0</td><td>1,7%</td><td>0,795</td></tr>
+        <tr><td>Mahalanobis</td><td>118</td><td>0</td><td>0,8%</td><td>0,528</td></tr>
+      </tbody>
+    </table>
+    <p class="cap">FN: defeito aprovado como bom (o erro mais caro). FP: bom rejeitado. Ordem: menos FN, depois maior especificidade. PatchCore por tipo: thread_top 23/23, scratch_neck 24/25, manipulated_front 20/24, scratch_head 20/24, thread_side 19/23.</p>
+  </section>
+
+  <section class="block">
+    <h2><span class="n">06</span>Curvas ROC</h2>
+    <img src="../relatorio/img/roc_curves.png" alt="">
+    <p class="cap">Ponto = limiar calibrado. Os clássicos ficam perto da diagonal do acaso.</p>
+  </section>
+
+  <section class="block">
+    <h2><span class="n">07</span>Verificação de robustez</h2>
+    <div class="note"><p>As boas do teste são mais escuras (brilho 170) que as de treino (184) e as defeituosas (187). Só o brilho separaria o teste com AUC 1,0.</p></div>
+    <p>AUC com as 64 boas reservadas no lugar das boas de teste, sem reajustar nada:</p>
+    <ul>
+      <li>PatchCore: 0,964 para 0,979. O resultado se mantém.</li>
+      <li>Autoencoder: 0,795 para 0,58. Sua AUC vinha do brilho.</li>
+      <li>Clássicos: entre 0,40 e 0,63, perto do acaso.</li>
+    </ul>
+  </section>
+
+  <section class="block wide conclusion">
+    <div class="big">
+      <div class="stat"><div class="num">13 / 119</div><div class="lbl">defeitos aprovados: PatchCore</div></div>
+      <div class="stat bad"><div class="num">94 / 119</div><div class="lbl">defeitos aprovados: melhor clássico (k-NN)</div></div>
+    </div>
+    <div class="block">
+      <h2><span class="n">08</span>Conclusão</h2>
+      <ul>
+        <li>Modelo escolhido: PatchCore. Detecta 106 de 119 defeitos e rejeita 3 de 41 boas, aprendendo só com 256 imagens boas e sem re-treinar a rede.</li>
+        <li>A segmentação clássica funciona, mas descritores globais não enxergam defeitos pequenos e locais.</li>
+        <li>Limites: teste pequeno (160 imagens) e o viés de brilho do próprio dataset.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>Dados: MVTec Anomaly Detection Dataset (screw), CC BY-NC-SA 4.0. PatchCore: Roth et al., CVPR 2022. Wide ResNet-50: pesos ImageNet do torchvision.</span>
+  <span>Código, protocolo e resultados reproduzíveis no repositório do projeto.</span>
+</footer>
+</div>
+</body>
+</html>

@@ -975,3 +975,183 @@ Nenhuma imagem reservada foi aberta, e a calibração final real não foi execut
 Relatório: [results/stage5/comparison_v1/report.md](results/stage5/comparison_v1/report.md).
 Tabelas: `summary.csv`, `best_by_representation.csv`, `covariance_diagnostics.csv`
 e `score_distributions.csv`. Auditoria: `results/stage5/execution_v1/postflight.json`.
+
+## Etapas 6 a 9: LOF, avaliação no teste e melhoria com descritores locais
+
+Escopo final do projeto: visão computacional clássica, com três detectores
+One-Class: One-Class SVM, LOF e Isolation Forest. k-NN e Mahalanobis (etapas
+4/5) ficam como registro histórico. O experimento com redes neurais foi movido
+para a pasta separada [`neural_networks/`](neural_networks/README.md) e não é
+usado por `src/`.
+
+A lista completa de arquivos criados, alterados e movidos nesta rodada, e a
+explicação de por que os resultados melhoraram, estão em [ALTERACOES.md](ALTERACOES.md).
+Relatório final: `docs/relatorio/index.html`. Pôster A3: `docs/poster/poster_a3.pdf`.
+
+### Protocolo comum
+
+- Ajuste somente nas 256 boas de desenvolvimento (`fit_ids` do manifesto externo).
+- Limiar no quantil empírico de 95% (`method="higher"`) dos scores das 64 boas
+  reservadas (`calibration_ids`), meta de 5% de boas rejeitadas.
+- Defeito é a classe positiva: falso negativo = parafuso defeituoso aprovado.
+  Critério de escolha (slide 12): menor número de falsos negativos.
+
+### Etapa 6: Local Outlier Factor
+
+`src/lof.py` implementa `LOFAnomalyDetector` (scikit-learn, `novelty=True`,
+limiar nativo ignorado). `src/lof_experiments.py compare` repete a busca interna
+das etapas 4/5 (sementes 42/43/44, R1/R2/R3, k em 5/10/20/35) com a regra RMSE
+versus 5%. Escolha: R2, k=5. Os módulos já assinados não foram alterados.
+
+### Etapa 8: avaliação dos modelos globais no teste completo
+
+`src/final_evaluation.py` aplica os modelos congelados (vetor global de
+HOG/Gabor/bordas/geometria) às 160 imagens de teste:
+
+| Modelo | FN (de 119) | FP (de 41) | Recall defeitos | AUC |
+|---|---:|---:|---:|---:|
+| Isolation Forest (R1) | 100 | 3 | 16,0% | 0,634 |
+| LOF (R2, k=5) | 104 | 3 | 12,6% | 0,622 |
+| One-Class SVM (R2) | 110 | 1 | 7,6% | 0,438 |
+
+Os três ficam perto do acaso. Uma verificação de robustez (`src/robustness_check.py`)
+mostrou ainda um viés do dataset: as 41 boas de teste são mais escuras (brilho
+médio 170) que as boas de treino (184) e os defeitos (187); só o brilho separa
+boas de defeitos do teste com AUC 1,0. Por isso, nas etapas seguintes as boas
+de teste nunca são usadas para escolher nada.
+
+### Etapa 9: diagnóstico e melhoria dos modelos clássicos
+
+#### Diagnóstico
+
+Por bloco de atributos, AUC entre as 64 boas reservadas e os defeitos da metade
+de seleção (LOF/Isolation Forest ajustados só no bloco):
+
+| Bloco | Dimensão | LOF | Isolation Forest |
+|---|---:|---:|---:|
+| HOG 16x16 (config. C) | 3.864 | 0,51 | 0,60 |
+| HOG 8x8 (config. A) | 25.380 | 0,48 | 0,47 |
+| Gabor | 24 | 0,72 | 0,66 |
+| Bordas | 3 | 0,61 | 0,65 |
+| Geometria | 6 | 0,57 | 0,53 |
+
+O vetor global é 99,9% HOG e o HOG global não carrega sinal: ele resume a peça
+inteira, e a variação normal entre parafusos bons (fase da rosca, reflexos)
+domina um defeito de poucos pixels. Os blocos pequenos têm algum sinal, mas são
+diluídos. A segmentação e o alinhamento funcionam bem
+(`results/stage8/report_figures/aligned_good_rois.png`); o problema é resumir
+a ROI inteira num único vetor.
+
+#### Método: descritores locais sobre a ROI alinhada (`src/local_features.py`)
+
+1. Reutiliza a ROI alinhada das etapas 1-2 (cache em `src/roi_cache.py`),
+   384x128, cabeça à esquerda. Brilho/contraste normalizados por imagem.
+2. Divide a ROI numa grade de patches sobrepostos (lado 24, 32 ou 48, passo de meio patch).
+3. Cada patch recebe um descritor clássico curto: HOG local (bloco 2x2), histograma
+   LBP uniforme, energia média dos 12 filtros de Gabor do projeto, densidade de
+   bordas Canny e silhueta (fração de máscara e bordas superior/inferior).
+4. Um detector One-Class (SVM, LOF ou Isolation Forest) por posição da grade,
+   ajustado com os patches das boas naquela posição e nas vizinhas (tolerância a
+   pequenos desalinhamentos e à fase da rosca).
+5. O score do patch é padronizado por média/desvio de boas fora da amostra
+   (ajuste cruzado em 2 dobras); o score da imagem é o maior patch ou a média
+   dos 3 maiores. Como os scores são por posição, o modelo também indica onde
+   está o defeito.
+
+#### Protocolo da etapa 9 (definido antes dos experimentos)
+
+O teste completo já tinha sido consultado na etapa 8. Para não ajustar ao teste:
+
+- `src/defect_split.py` divide o teste, estratificado por categoria e com semente
+  2026, em SELEÇÃO (58 defeitos; as 20 boas dessa metade não são usadas) e
+  HOLDOUT (61 defeitos e 21 boas), registrado em `results/stage9/defect_split_v1.json`.
+- Seleção: maior AUC entre as 64 boas reservadas e os 58 defeitos de seleção;
+  desempate pelo recall com 95% de especificidade. As boas de teste (com o viés de
+  brilho) não participam.
+- Grade: patch 24/32/48 x descritores (todos ou sem HOG) x vizinhança 1/2 x
+  agregação máx/top3; LOF k 10/20/40, Isolation Forest 200 árvores com
+  `max_samples` auto/512, SVM RBF `nu` 0,05/0,10: 168 combinações.
+- Final: limiar nas 64 reservadas e avaliação única no holdout.
+
+Escolhas (`results/stage9/selection_v1/selection.json`):
+
+| Modelo | Patch | Descritores | Parâmetros | AUC seleção |
+|---|---:|---|---|---:|
+| LOF | 32 | todos | k=10, top3 | 0,984 |
+| One-Class SVM | 24 | todos | nu=0,05, top3 | 0,975 |
+| Isolation Forest | 24 | sem HOG | 200 árvores, 512 amostras, top3 | 0,948 |
+
+#### Resultado no holdout (61 defeitos, 21 boas)
+
+| Modelo | FN global | FN local | FP global | FP local | AUC global | AUC local | AUC reservadas vs defeitos (local) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| LOF | 53 | 2 | 0 | 3 | 0,561 | 0,958 | 0,986 |
+| One-Class SVM | 57 | 11 | 0 | 3 | 0,440 | 0,903 | 0,935 |
+| Isolation Forest | 54 | 19 | 2 | 2 | 0,600 | 0,910 | 0,924 |
+
+Modelo escolhido: LOF local, com 59 de 61 defeitos detectados (96,7%) e 3 de 21
+boas rejeitadas. Por categoria: manipulated_front 12/12, scratch_head 12/12,
+scratch_neck 12/13, thread_side 11/12, thread_top 12/12. "Global" são os
+modelos congelados das etapas 5/6 avaliados nas mesmas 82 imagens.
+
+Ablação (LOF k=20, patch 32; AUC na seleção): HOG local sozinho 0,916; Gabor
+sozinho 0,964; LBP 0,581; bordas+silhueta 0,483; sem HOG 0,938; todos 0,980;
+sem tolerância a vizinhos 0,951; sem normalizar brilho 0,979. O mesmo HOG que
+não tinha sinal no vetor global passa a ter quando usado localmente.
+
+Figuras em `results/stage9/figures/`: `before_after.png`, `ablation.png` e
+`local_maps_lof.png` (mapas de anomalia do LOF sobre a ROI: a região marcada cai
+sobre a ponta amassada, a cabeça riscada, o pescoço e a rosca danificada).
+
+Limitações: holdout pequeno (uma boa vale 4,8 pontos de especificidade); as boas
+do holdout têm o viés de brilho (a normalização por imagem reduz seu efeito, e a
+AUC contra as boas reservadas é informada ao lado); a grade foi avaliada na
+mesma metade de seleção, então as AUCs de seleção são otimistas, mas o holdout
+não participou de nenhuma escolha.
+
+### Reprodução
+
+```bash
+export DATASET_DIR="$HOME/Downloads/data"
+export TRAIN_FLAT_IS_GOOD=true
+export OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1
+
+python -m unittest discover -s tests -v
+
+# Etapa 6 (LOF global) e calibração final dos modelos globais
+python -m src.lof_experiments compare --study results/stage3/study_v1 \
+  --cache results/stage3/full_v1 --out results/stage6/lof_comparison_v1
+python -m src.lof_experiments finalize --study results/stage3/study_v1 \
+  --cache results/stage3/full_v1 --selection results/stage6/lof_comparison_v1/selection.json \
+  --out results/stage6/final_lof_v1 --confirm-final-calibration
+for model in svm isolation_forest; do
+  python -m src.final_calibration --study results/stage3/study_v1 --cache results/stage3/full_v1 \
+    --selection results/stage5/selection_all_v1/selection.json \
+    --model "$model" --out "results/stage5/final_${model}_v1" --confirm-final-calibration || break
+done
+
+# Etapa 8: modelos globais no teste completo + figuras do pipeline
+python -m src.final_evaluation --study results/stage3/study_v1 \
+  --out results/stage8/test_evaluation_classical_v1 --confirm-test-evaluation
+python -m src.report_figures --study results/stage3/study_v1 --out results/stage8/report_figures
+
+# Etapa 9: divisão do teste, cache de ROIs, seleção, holdout e figuras
+python -m src.defect_split --study results/stage3/study_v1 --out results/stage9/defect_split_v1.json
+python -m src.roi_cache --study results/stage3/study_v1 --out results/stage9/roi_cache_v1.npz
+python -m src.stage9_experiments select --out results/stage9/selection_v1   # --resume retoma
+python -m src.stage9_experiments final --selection results/stage9/selection_v1/selection.json \
+  --out results/stage9/final_v1
+python -m src.stage9_figures --out results/stage9/figures
+```
+
+A busca da etapa 9 leva poucos minutos em 16 núcleos. Ela grava cada ajuste em
+`runs.jsonl` e pode ser retomada com `--resume` se for interrompida.
+
+Notas de ambiente desta execução (Linux, Python 3.14):
+
+- Os manifestos guardam caminhos absolutos canônicos de `/home/gabrieladc/Downloads/data`.
+  Para reutilizá-los em outra máquina, o dataset foi copiado byte a byte para esse
+  mesmo caminho; os SHA-256 de todas as imagens foram verificados pelo protocolo.
+- As seleções guardam SHA-256 dos arquivos `src/*.py` com finais de linha LF. Num
+  checkout Windows com CRLF a verificação de procedência falha; converter para LF
+  (conteúdo idêntico ao do Git) antes de rodar a calibração final.

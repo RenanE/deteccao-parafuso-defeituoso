@@ -12,3 +12,4 @@ venv/
 # Modelos serializados e chckpoints
 *.pkl
 *.joblib
+vision/
