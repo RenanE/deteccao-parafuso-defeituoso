@@ -1,4 +1,4 @@
-"""Etapa 9: melhoria dos modelos clássicos (SVM, LOF, Isolation Forest) com descritores locais.
+"""Etapa 9: melhoria dos modelos clássicos com descritores locais.
 
 Protocolo (definido antes dos experimentos):
 - Ajuste: 256 boas de desenvolvimento (fit_ids). Nada de teste no ajuste.
@@ -26,6 +26,7 @@ from sklearn.metrics import roc_auc_score
 
 from .feature_experiments import file_hash, save_json, signature
 from .local_features import LocalConfig, PatchAnomalyDetector, extrair_lote
+from .mahalanobis import NumericalFitError
 
 CACHE = Path("results/stage9/roi_cache_v1.npz")
 SPLIT = Path("results/stage9/defect_split_v1.json")
@@ -36,13 +37,25 @@ FEATURE_GRID = [LocalConfig(patch=p, descriptors=d, znorm=True, neighbors=n)
 MODEL_GRID = ([("lof", {"n_neighbors": k}) for k in (10, 20, 40)]
               + [("isolation_forest", {"n_estimators": 200, "max_samples": m}) for m in ("auto", 512)]
               + [("svm", {"nu": nu}) for nu in (0.05, 0.1)])
+DISTANCE_MODEL_GRID = (
+    [("knn", {"n_neighbors": k, "metric": "euclidean", "aggregation": agg})
+     for k in (10, 20, 40) for agg in ("mean", "kth")]
+    + [("mahalanobis", {"covariance": covariance}) for covariance in ("ledoit_wolf", "elliptic")]
+)
+ORIGINAL_MODELS = ("svm", "lof", "isolation_forest")
+DISTANCE_MODELS = ("knn", "mahalanobis")
+DISTANCE_SOURCE_FILES = ("anomaly.py", "knn.py", "mahalanobis.py")
 ABLATION = [("hog",), ("lbp",), ("gabor",), ("edges", "shape"), ("lbp", "gabor", "edges", "shape"),
             ("hog", "lbp", "gabor", "edges", "shape")]
 
 
 def load():
     c = np.load(CACHE)
-    split = json.loads(SPLIT.read_text())
+    split = json.loads(SPLIT.read_text(encoding="utf-8"))
+    if signature({k: v for k, v in split.items() if k != "signature"}) != split["signature"]:
+        raise SystemExit("Divisão do teste alterada.")
+    if c["outer_manifest_hash"].item() != split["outer_manifest_hash"]:
+        raise SystemExit("Divisão do teste e cache usam manifestos diferentes.")
     ids = [str(x) for x in c["ids"]]
     groups = c["groups"]
     cls = split["classes"]
@@ -65,74 +78,92 @@ def recall_at_spec(neg, pos, spec=0.95):
     return float(np.mean(pos > thr))
 
 
-def select(out, resume=False):
+def select(out, resume=False, model_set="original"):
+    distances = model_set == "knn-mahalanobis"
+    model_grid = DISTANCE_MODEL_GRID if distances else MODEL_GRID
+    models = DISTANCE_MODELS if distances else ORIGINAL_MODELS
     out = Path(out)
     out.mkdir(parents=True, exist_ok=resume)
     if (out / "selection.json").exists():
         raise SystemExit(f"Seleção já concluída: {out}")
-    c, ids, idx, split = load()
+    c, _, idx, split = load()
     rows, features = [], {}
     log_path = out / "runs.jsonl"
     done = {}
     if resume and log_path.exists():
         # Retoma uma execução interrompida: cada ajuste já registrado não é refeito.
-        for line in log_path.read_text().splitlines():
+        for line in log_path.read_text(encoding="utf-8").splitlines():
             r = json.loads(line)
             done.setdefault((r["tag"], r["config"].rsplit("-", 1)[0], r["model"], r["params"]), []).append(r)
         print(f"Retomando: {sum(len(v) for v in done.values())} linhas já registradas", flush=True)
-    log = log_path.open("a")
-
-    def run(cfg, model, params, tag):
+    def run(log, cfg, model, params, tag):
         key = cfg.key()
-        previous = done.get((tag, key.rsplit("-", 1)[0], model, json.dumps(params, sort_keys=True)))
-        if previous:
-            rows.extend(previous)
+        aggregations = ("max", "top3") if tag == "grade" else ("max",)
+        params_json = json.dumps(params, sort_keys=True)
+        previous = {r["aggregation"]: r for r in
+                    done.get((tag, key.rsplit("-", 1)[0], model, params_json), ())}
+        if all(agg in previous for agg in aggregations):
+            rows.extend(previous[agg] for agg in aggregations)
             return
         if key not in features:
             features[key] = extrair_lote(c["rois"], c["masks"], cfg)
         F = features[key]
         t = time.perf_counter()
         det = PatchAnomalyDetector(model, params, cfg)
-        cal_map, sel_map = det.fit_score(F[idx["fit"]], [F[idx["calibration"]], F[idx["sel_defects"]]])
-        out_rows = []
-        for agg in ("max", "top3"):
+        reason = None
+        try:
+            cal_map, sel_map = det.fit_score(F[idx["fit"]], [F[idx["calibration"]], F[idx["sel_defects"]]])
+        except NumericalFitError as exc:
+            if model != "mahalanobis":
+                raise
+            reason = str(exc)
+
+        for agg in aggregations:
+            if agg in previous:
+                rows.append(previous[agg])
+                continue
             det.config = LocalConfig(**{**asdict(cfg), "aggregation": agg})
-            cal, sel = det.aggregate(cal_map), det.aggregate(sel_map)
-            out_rows.append({"tag": tag, "config": det.config.key(), "model": model,
-                             "params": json.dumps(params, sort_keys=True), "patch": cfg.patch,
-                             "descriptors": "+".join(cfg.descriptors), "neighbors": cfg.neighbors,
-                             "aggregation": agg, "dim": int(F.shape[-1]),
-                             "auc_sel": auc(cal, sel), "recall95_sel": recall_at_spec(cal, sel),
-                             "seconds": time.perf_counter() - t})
-        if tag != "grade":
-            out_rows = out_rows[:1]
-        rows.extend(out_rows)
-        for r in out_rows:
+            r = {"tag": tag, "config": det.config.key(), "model": model,
+                 "params": params_json, "patch": cfg.patch, "descriptors": "+".join(cfg.descriptors),
+                 "neighbors": cfg.neighbors, "aggregation": agg, "dim": int(F.shape[-1])}
+            if reason is None:
+                cal, sel = det.aggregate(cal_map), det.aggregate(sel_map)
+                r.update(auc_sel=auc(cal, sel), recall95_sel=recall_at_spec(cal, sel))
+            else:
+                r.update(auc_sel=None, recall95_sel=None)
+            r["seconds"] = time.perf_counter() - t
+            if distances:
+                r.update(status="ok" if reason is None else "skipped", reason=reason)
+            rows.append(r)
             log.write(json.dumps(r) + "\n")
         log.flush()
-        r = out_rows[0]
-        print(f"[{len(rows)}] {tag} {model} {params} {r['config']}: AUC max={r['auc_sel']:.3f} "
-              f"recall95={r['recall95_sel']:.2f}" + (f" | top3 AUC={out_rows[1]['auc_sel']:.3f}" if len(out_rows) > 1 else "")
-              + f" ({r['seconds']:.0f}s)", flush=True)
+        metrics = reason or " | ".join(
+            f"{r['aggregation']}: AUC={r['auc_sel']:.3f}, recall95={r['recall95_sel']:.2f}"
+            for r in rows[-len(aggregations):]
+        )
+        print(f"[{len(rows)}] {tag} {model} {params} {key}: {metrics} ({time.perf_counter() - t:.0f}s)", flush=True)
 
-    # 1) Grade principal (agregação max e top3 compartilham o ajuste).
-    for cfg, (model, params) in itertools.product(FEATURE_GRID, MODEL_GRID):
-        run(cfg, model, params, "grade")
-    # 2) Ablação dos descritores (LOF k=20, P=32, vizinhança 1), para o relatório.
-    for desc in ABLATION:
-        run(LocalConfig(patch=32, descriptors=desc, znorm=True, neighbors=1), "lof", {"n_neighbors": 20}, "ablacao")
-    run(LocalConfig(patch=32, znorm=False, neighbors=1), "lof", {"n_neighbors": 20}, "ablacao_sem_znorm")
-    run(LocalConfig(patch=32, neighbors=0), "lof", {"n_neighbors": 20}, "ablacao_sem_vizinhos")
+    with log_path.open("a", encoding="utf-8") as log:
+        # 1) Grade principal (agregação max e top3 compartilham o ajuste).
+        for cfg, (model, params) in itertools.product(FEATURE_GRID, model_grid):
+            run(log, cfg, model, params, "grade")
+        # 2) Ablação dos descritores (LOF k=20, P=32, vizinhança 1), para o relatório.
+        if not distances:
+            for desc in ABLATION:
+                run(log, LocalConfig(patch=32, descriptors=desc, znorm=True, neighbors=1), "lof", {"n_neighbors": 20}, "ablacao")
+            run(log, LocalConfig(patch=32, znorm=False, neighbors=1), "lof", {"n_neighbors": 20}, "ablacao_sem_znorm")
+            run(log, LocalConfig(patch=32, neighbors=0), "lof", {"n_neighbors": 20}, "ablacao_sem_vizinhos")
 
-    log.close()
-    with (out / "runs.csv").open("x", newline="") as f:
+    with (out / "runs.csv").open("x", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(rows[0]))
         w.writeheader()
         w.writerows(rows)
-    grid = [r for r in rows if r["tag"] == "grade"]
+    grid = [r for r in rows if r["tag"] == "grade" and r["auc_sel"] is not None]
     selected = {}
-    for model in ("svm", "lof", "isolation_forest"):
+    for model in models:
         cand = [r for r in grid if r["model"] == model]
+        if not cand:
+            continue
         best = max(cand, key=lambda r: (round(r["auc_sel"], 6), r["recall95_sel"], -r["dim"]))
         selected[model] = {k: best[k] for k in ("config", "params", "patch", "descriptors", "neighbors",
                                                  "aggregation", "auc_sel", "recall95_sel")}
@@ -141,6 +172,9 @@ def select(out, resume=False):
                  "split_signature": split["signature"], "roi_cache_sha256": file_hash(CACHE),
                  "sources": {n: file_hash(Path("src") / n) for n in ("local_features.py", "stage9_experiments.py")},
                  "n_runs": len(rows)}
+    if distances:
+        selection["sources"].update({n: file_hash(Path("src") / n) for n in DISTANCE_SOURCE_FILES})
+        selection["models_without_viable_config"] = [model for model in models if model not in selected]
     selection["signature"] = signature(selection)
     save_json(out / "selection.json", selection)
     print(json.dumps(selected, indent=1))
@@ -154,12 +188,20 @@ def config_from(sel):
 def final(selection_path, out):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=False)
-    selection = json.loads(Path(selection_path).read_text())
+    selection = json.loads(Path(selection_path).read_text(encoding="utf-8"))
     if signature({k: v for k, v in selection.items() if k != "signature"}) != selection["signature"]:
         raise SystemExit("Seleção alterada.")
     c, ids, idx, split = load()
     if file_hash(CACHE) != selection["roi_cache_sha256"]:
         raise SystemExit("Cache de ROIs alterado.")
+    if split["signature"] != selection["split_signature"]:
+        raise SystemExit("Divisão do teste difere da seleção.")
+    if "models_without_viable_config" in selection:
+        sources = ("local_features.py", "stage9_experiments.py", *DISTANCE_SOURCE_FILES)
+        if selection["sources"] != {n: file_hash(Path("src") / n) for n in sources}:
+            raise SystemExit("Código alterado desde a seleção.")
+    if not selection["selected"]:
+        raise SystemExit("Nenhum modelo com configuração numericamente viável.")
     classes = np.array([split["classes"].get(p, "good") for p in ids])
     results, preds, maps = {}, [], {}
     for model, sel in selection["selected"].items():
@@ -193,7 +235,7 @@ def final(selection_path, out):
     save_json(out / "holdout_evaluation.json", {"selection_signature": selection["signature"],
                                                  "n_holdout_goods": len(idx["hold_goods"]),
                                                  "n_holdout_defects": len(idx["hold_defects"]), "results": results})
-    with (out / "predictions.csv").open("x", newline="") as f:
+    with (out / "predictions.csv").open("x", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(preds[0]))
         w.writeheader()
         w.writerows(preds)
@@ -208,13 +250,14 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("select")
     p.add_argument("--out", required=True)
+    p.add_argument("--models", choices=("original", "knn-mahalanobis"), default="original")
     p.add_argument("--resume", action="store_true", help="Retoma a partir de runs.jsonl")
     p = sub.add_parser("final")
     p.add_argument("--selection", required=True)
     p.add_argument("--out", required=True)
     args = parser.parse_args(argv)
     if args.cmd == "select":
-        select(args.out, resume=args.resume)
+        select(args.out, resume=args.resume, model_set=args.models)
     else:
         final(args.selection, args.out)
 

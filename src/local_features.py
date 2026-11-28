@@ -31,6 +31,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import OneClassSVM
 
 from .features import criar_banco_gabor
+from .knn import KNNAnomalyDetector
+from .mahalanobis import MahalanobisAnomalyDetector, NumericalFitError
 from .preprocessing import aplicar_clahe
 
 DESCRIPTORS = ("hog", "lbp", "gabor", "edges", "shape")
@@ -114,11 +116,17 @@ def make_detector(model, params, seed=42):
         return LocalOutlierFactor(novelty=True, **params)
     if model == "isolation_forest":
         return IsolationForest(random_state=seed, n_jobs=1, **params)
+    if model == "knn":
+        return KNNAnomalyDetector(**params)
+    if model == "mahalanobis":
+        return MahalanobisAnomalyDetector(random_state=seed, **params)
     raise ValueError(model)
 
 
 def _score(det, X):
     # Convenção do projeto: maior = mais anômalo.
+    if isinstance(det, (KNNAnomalyDetector, MahalanobisAnomalyDetector)):
+        return det.anomaly_score(X)
     return -det.score_samples(X) if not isinstance(det, OneClassSVM) else -det.decision_function(X)
 
 
@@ -129,14 +137,17 @@ def _pool(F, r, c, k):
     return np.concatenate(blocks)
 
 
-def _fit_position(Xtr, Xref, model, params, seed, targets=()):
+def _fit_position(Xtr, Xref, model, params, seed, targets, position):
     """Ajusta uma posição; devolve média/desvio de referência e os scores brutos dos alvos.
 
     O modelo não é devolvido ao processo principal (economia de memória: centenas de
     florestas por configuração não cabem na RAM).
     """
     scaler = StandardScaler().fit(Xtr)
-    det = make_detector(model, params, seed).fit(scaler.transform(Xtr))
+    try:
+        det = make_detector(model, params, seed).fit(scaler.transform(Xtr))
+    except NumericalFitError as exc:
+        raise NumericalFitError(f"Patch {position}: {exc}") from exc
     ref = _score(det, scaler.transform(Xref))
     return float(ref.mean()), float(ref.std()), [_score(det, scaler.transform(X)) for X in targets]
 
@@ -166,7 +177,7 @@ class PatchAnomalyDetector:
             Fa, Fb = F[a], F[b]
             res = Parallel(n_jobs=self.n_jobs, batch_size=8)(
                 delayed(_fit_position)(_pool(Fa, r, c, k), Fb[:, r, c], self.model, self.params, self.seed,
-                                       [T[:, r, c] for T in targets])
+                                       [T[:, r, c] for T in targets], (r, c))
                 for r, c in positions)
             # Piso do desvio: posições quase constantes (fundo liso) não podem ter z-scores explosivos.
             floor = max(0.5 * float(np.median([sd for _, sd, _ in res])), 1e-9)

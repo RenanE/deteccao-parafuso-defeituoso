@@ -1,11 +1,18 @@
 """Testes sintéticos da etapa 9 (descritores locais e divisão do teste)."""
 
+import csv
+import json
+from pathlib import Path
+import tempfile
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 
 from src.defect_split import make_split
 from src.local_features import LocalConfig, PatchAnomalyDetector, extrair_lote
+from src.mahalanobis import NumericalFitError
+from src.stage9_experiments import DISTANCE_MODEL_GRID, select
 
 
 def fake_roi(rng, defect=False):
@@ -47,6 +54,63 @@ class LocalDetectorTests(unittest.TestCase):
         m = det.fit_score(self.F_fit, [self.F_bad[:1]])[0][0]
         # Patches que cobrem o risco (y 50-70, x 60-80) ficam entre os 5% mais anômalos do mapa.
         self.assertGreater(m[2:5, 3:5].max(), np.quantile(m, 0.95))
+
+
+class DistanceModelTests(unittest.TestCase):
+    def test_local_distances_rank_perturbed_patches_higher(self):
+        rng = np.random.default_rng(42)
+        fit = rng.normal(size=(80, 2, 2, 3))
+        good = rng.normal(size=(8, 2, 2, 3))
+        bad = good.copy()
+        bad[:, 0, 0] += 12
+        config = LocalConfig(neighbors=1)
+        for model, params in DISTANCE_MODEL_GRID:
+            with self.subTest(model=model, params=params):
+                detector = PatchAnomalyDetector(model, params, config, n_jobs=1)
+                good_maps, bad_maps = detector.fit_score(fit, [good, bad])
+                self.assertEqual(bad_maps.shape, (8, 2, 2))
+                self.assertTrue(np.isfinite(bad_maps).all())
+                np.testing.assert_array_equal(bad_maps[:, 1:, :], good_maps[:, 1:, :])
+                self.assertTrue(np.all(detector.aggregate(bad_maps) > detector.aggregate(good_maps)))
+
+    def test_singular_elliptic_patch_raises_without_fallback(self):
+        fit = np.arange(80, dtype=float).reshape(80, 1, 1, 1)
+        fit = np.repeat(fit, 2, axis=-1)
+        detector = PatchAnomalyDetector(
+            "mahalanobis", {"covariance": "elliptic"}, LocalConfig(), n_jobs=1,
+        )
+        with self.assertRaisesRegex(NumericalFitError, r"Patch \(0, 0\): Elliptic inviável"):
+            detector.fit_score(fit, [fit[:2]])
+
+    def test_selection_logs_infeasible_rows_without_using_holdout(self):
+        fit = np.arange(120, dtype=float).reshape(120, 1, 1, 1)
+        features = np.repeat(fit, 2, axis=-1)
+        idx = {"fit": np.arange(100), "calibration": np.arange(100, 104),
+               "sel_defects": np.arange(104, 108)}
+        cache = {"rois": None, "masks": None}
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "selection"
+            with (
+                patch("src.stage9_experiments.load", return_value=(cache, [], idx, {"signature": "split"})),
+                patch("src.stage9_experiments.FEATURE_GRID", [LocalConfig()]),
+                patch("src.stage9_experiments.extrair_lote", return_value=features),
+                patch("src.stage9_experiments.file_hash", return_value="hash"),
+                patch("src.stage9_experiments.PatchAnomalyDetector",
+                      side_effect=lambda *args: PatchAnomalyDetector(*args, n_jobs=1)),
+                patch("builtins.print"),
+            ):
+                select(out, model_set="knn-mahalanobis")
+
+            selection = json.loads((out / "selection.json").read_text(encoding="utf-8"))
+            self.assertEqual(set(selection["selected"]), {"knn", "mahalanobis"})
+            self.assertEqual(json.loads(selection["selected"]["mahalanobis"]["params"]),
+                             {"covariance": "ledoit_wolf"})
+            with (out / "runs.csv").open(encoding="utf-8", newline="") as stream:
+                rows = list(csv.DictReader(stream))
+            self.assertEqual(len(rows), 16)
+            skipped = [row for row in rows if row["status"] == "skipped"]
+            self.assertEqual({r["aggregation"] for r in skipped}, {"max", "top3"})
+            self.assertTrue(all("Elliptic inviável" in row["reason"] and not row["auc_sel"] for row in skipped))
 
 
 class SplitTests(unittest.TestCase):
