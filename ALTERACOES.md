@@ -14,7 +14,7 @@ O [README](README.md) descreve o escopo clássico final, o protocolo, os resulta
 ## Etapas 6 a 9 · Execução histórica
 
 - **Etapa 6.** LOF em modo de novidade entrou na busca global, com escolha de R2 e 5 vizinhos. SVM, LOF e Isolation Forest foram calibrados nas 64 boas reservadas, no quantil de 95%.
-- **Etapa 8.** A avaliação global do teste completo registrou AUCs de 0,438 (SVM), 0,622 (LOF) e 0,634 (Isolation Forest). O diagnóstico também constatou menor brilho nas boas de teste. [Métricas históricas globais](docs/results/historico/etapa8_metricas.csv) · [Diagnóstico de brilho](docs/relatorio/img/brightness_robustness.png)
+- **Etapa 8.** A avaliação global do teste completo registrou AUCs de 0,438 (SVM), 0,622 (LOF) e 0,634 (Isolation Forest). O diagnóstico também constatou menor brilho nas boas de teste. [Métricas históricas globais](docs/results/historico/etapa8_metricas.csv) · [Diagnóstico de brilho](docs/results/historico/brightness_robustness.png)
 - **Etapa 9.** A ROI alinhada foi dividida em patches sobrepostos. Os detectores passaram a ajustar uma referência por posição com vizinhança espacial, dois ajustes cruzados e padronização dos scores. A semente 2026 congelou a divisão estratificada. A busca usou 58 defeitos de seleção e 64 boas reservadas. O holdout continha 61 defeitos e 21 boas. Foram avaliadas 168 combinações e oito ablações.
 - **Resultados históricos.** No holdout, os falsos negativos do LOF passaram de 53 com a representação global para 2 com a local. SVM e Isolation Forest locais tiveram 11 e 19 falsos negativos, respectivamente. Na seleção, a ablação registrou AUC de 0,916 para HOG local e de 0,964 para Gabor local isolado. [Métricas históricas locais](docs/results/historico/etapa9_metricas.csv) · [Ablação](docs/results/historico/ablation.png)
 
@@ -32,7 +32,7 @@ A execução histórica documentada usou Linux e Python 3.14. Os manifestos da �
 
 O [notebook 04](notebooks/04_avaliacao_classica.ipynb) consolidou hiperparâmetros, métricas, ROC, matrizes de confusão, recall por categoria e mapas de anomalia. A exportação leve inclui IDs relativos, SHA-256 do inventário, grades, predições e figuras. A representação portátil mantém a composição das partições e usa hashes estruturais próprios. Os hashes e assinaturas dos artefatos de origem ficam registrados na [proveniência](docs/results/reprodutibilidade/proveniencia.json).
 
-O experimento com redes neurais e os materiais temporários ficaram fora do rastreamento da versão clássica, com cópias locais preservadas. O [relatório](docs/relatorio/index.html) e o [pôster](docs/poster/poster_a3.pdf) ainda correspondem à versão anterior.
+O experimento com redes neurais e os materiais temporários ficaram fora do rastreamento da versão clássica, com cópias locais preservadas. O [pôster A1](docs/poster/poster.html) está disponível em HTML.
 
 ## Análises complementares de limiar
 

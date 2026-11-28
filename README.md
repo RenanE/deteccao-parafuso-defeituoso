@@ -85,7 +85,7 @@ Na reprodução, o LOF teve o maior recall no limiar usado, detectando 58 dos 61
 
 - O holdout contém 61 defeitos e 21 boas. Uma imagem boa representa cerca de 4,8 pontos percentuais de especificidade. As diferenças observadas entre modelos carecem de teste estatístico ou validação externa.
 - A etapa 8 consultou o teste completo antes da etapa local. A divisão posterior protegeu a busca da etapa 9, mas a motivação para a mudança de representação veio desse diagnóstico. A AUC de seleção é uma métrica usada para escolher configurações e pode ser otimista. O estudo não mediu a variabilidade entre diferentes divisões.
-- Na inspeção histórica, as boas do teste eram mais escuras que as boas reservadas e os defeitos. A normalização local busca reduzir esse efeito. A comparação adicional entre as boas reservadas e os defeitos do holdout está publicada separadamente no CSV de métricas. [Diagnóstico histórico](docs/relatorio/img/brightness_robustness.png)
+- Na inspeção histórica, as boas do teste eram mais escuras que as boas reservadas e os defeitos. A normalização local busca reduzir esse efeito. A comparação adicional entre as boas reservadas e os defeitos do holdout está publicada separadamente no CSV de métricas. [Diagnóstico histórico](docs/results/historico/brightness_robustness.png)
 - Os mapas localizam patches de score alto. Eles são ilustrações qualitativas e não há uma avaliação quantitativa de localização contra máscaras de defeito.
 
 ## Análises complementares de limiar
@@ -197,7 +197,7 @@ A consulta no [notebook 04](notebooks/04_avaliacao_classica.ipynb) usa apenas os
 | [`tests/`](tests/) | Suíte de validação, integridade e experimentos sintéticos. |
 | [`notebooks/`](notebooks/) | Exemplos de pré-processamento, características, abordagem global e avaliação local. |
 | [`docs/results/`](docs/results/README.md) | Exportação leve do histórico, reprodução, avaliação final e hashes. |
-| [`docs/relatorio/`](docs/relatorio/index.html) e [`docs/poster/`](docs/poster/poster_a3.pdf) | Relatório e pôster da versão anterior, com atualização prevista para uma próxima etapa. |
+| [`docs/poster/`](docs/poster/poster.html) | Pôster A1 do projeto em HTML. |
 | [`ALTERACOES.md`](ALTERACOES.md) | Histórico técnico das etapas e mudanças recentes. |
 
 `data/`, `models/` e `results/` são pastas locais ignoradas pelo Git. A avaliação final dos cinco modelos está no notebook e em `docs/results/`.
