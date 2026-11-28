@@ -1,0 +1,18 @@
+{
+  "scores_sha256": "b7a7459a6761fdce6e95ebc8ba22aa07c7d7f92f2472c0516f64835499c125db",
+  "weights": [
+    1,
+    2,
+    3,
+    5,
+    10
+  ],
+  "partition_sizes": {
+    "calibration": 64,
+    "sel_defects": 58,
+    "sel_goods": 20,
+    "hold_goods": 21,
+    "hold_defects": 61
+  },
+  "exploratory": true
+}

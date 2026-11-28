@@ -33,3 +33,10 @@ A execução histórica documentada usou Linux e Python 3.14. Os manifestos da �
 O [notebook 04](notebooks/04_avaliacao_classica.ipynb) consolidou hiperparâmetros, métricas, ROC, matrizes de confusão, recall por categoria e mapas de anomalia. A exportação leve inclui IDs relativos, SHA-256 do inventário, grades, predições e figuras. A representação portátil mantém a composição das partições e usa hashes estruturais próprios. Os hashes e assinaturas dos artefatos de origem ficam registrados na [proveniência](docs/results/reprodutibilidade/proveniencia.json).
 
 O experimento com redes neurais e os materiais temporários ficaram fora do rastreamento da versão clássica, com cópias locais preservadas. O [relatório](docs/relatorio/index.html) e o [pôster](docs/poster/poster_a3.pdf) ainda correspondem à versão anterior.
+
+## Análises complementares de limiar
+
+- O [módulo de pontos de operação](src/stage9_operating_points.py) recuperou os scores por imagem das cinco configurações fixas e verificou exatamente os 410 scores de holdout e os cinco limiares originais. Foram comparados o quantil de 95% e os alvos de recall de pelo menos 95% e de 100% na seleção.
+- O [módulo de custo ponderado](src/stage9_threshold_cost.py) leu somente os scores salvos. Minimizou `J = w × FNR + FPR` com pesos 1, 2, 3, 5 e 10, usando FNR na seleção e FPR na calibração. A regra estrita de decisão trata empates no score, e o desempate do custo favorece menor FNR. O holdout ficou reservado à comparação exploratória e à fronteira de Pareto.
+- No kNN, os pesos 2 e 3 produziram 2 FN e 2 FP, enquanto 5 e 10 produziram 1 FN e 3 FP. A sensibilidade mostra a troca entre perder um defeito e reinspecionar mais peças boas. Um peso economicamente ótimo exige dados industriais.
+- As duas análises foram publicadas separadamente, com scores, limiares, métricas e gráficos, adicionadas ao notebook 04 e cobertas por testes de limiar, empates e dominância. [Arquivos e verificação](docs/results/README.md)

@@ -88,6 +88,25 @@ Na reprodução, o LOF teve o maior recall no limiar usado, detectando 58 dos 61
 - Na inspeção histórica, as boas do teste eram mais escuras que as boas reservadas e os defeitos. A normalização local busca reduzir esse efeito. A comparação adicional entre as boas reservadas e os defeitos do holdout está publicada separadamente no CSV de métricas. [Diagnóstico histórico](docs/relatorio/img/brightness_robustness.png)
 - Os mapas localizam patches de score alto. Eles são ilustrações qualitativas e não há uma avaliação quantitativa de localização contra máscaras de defeito.
 
+## Análises complementares de limiar
+
+Na inspeção industrial, falsos negativos deixam peças defeituosas passar. Falsos positivos retêm peças boas e podem gerar reinspeção ou descarte. O [protocolo original](docs/results/avaliacao_final/metricas.csv) conserva o limiar de quantil de 95% das boas reservadas. As análises complementares abaixo usam as mesmas configurações congeladas e o mesmo holdout, que já havia sido consultado. A interpretação é exploratória.
+
+- **Pontos de operação.** A análise recuperou 1.120 scores individuais. Os 410 scores do holdout e os cinco limiares originais foram reproduzidos com diferença absoluta zero. Além do quantil original, a análise avaliou o maior limiar com recall de pelo menos 95% ou de 100% nos 58 defeitos de seleção. A decisão estrita `score > limiar` inclui empates no score de corte ao usar o float64 imediatamente inferior. [Scores, métricas e gráficos ROC e FN/FP](docs/results/analises_complementares/operating_points_v1/)
+- **Otimização ponderada.** A função `J = w × FNR + FPR` combina a taxa de falsos negativos (`FN / total de defeitos`) com a taxa de falsos positivos (`FP / total de boas`). Foram avaliados pesos 1, 2, 3, 5 e 10. O limiar de cada modelo e peso foi escolhido usando a FNR dos 58 defeitos de seleção e a FPR das 64 boas reservadas. Em empate de custo, prevaleceu a menor FNR. O holdout só foi usado para avaliar os limiares fixados. [Comparação dos 40 pontos](docs/results/analises_complementares/threshold_cost_v1/comparison.csv) · [Fronteira de Pareto observada](docs/results/analises_complementares/threshold_cost_v1/pareto_holdout.png)
+
+**Sensibilidade do kNN no holdout**
+
+| Peso `w` | Limiar | FN | FP | Recall | Especificidade | Custo `J` |
+|---:|---:|---:|---:|---:|---:|---:|
+| 1 | 4,134554 | 2 | 2 | 96,7% | 90,5% | 0,1280 |
+| 2 | 4,134554 | 2 | 2 | 96,7% | 90,5% | 0,1608 |
+| 3 | 4,134554 | 2 | 2 | 96,7% | 90,5% | 0,1936 |
+| 5 | 3,752274 | 1 | 3 | 98,4% | 85,7% | 0,2248 |
+| 10 | 3,752274 | 1 | 3 | 98,4% | 85,7% | 0,3068 |
+
+Os pesos 2 e 3 levam ao mesmo ponto operacional, assim como os pesos 5 e 10. A transição observada aprova um defeito a menos e rejeita uma peça boa a mais. Custos de linhas com pesos distintos correspondem a funções diferentes. A escolha de um peso operacional requer dados industriais sobre prevalência de defeitos, custos de escape, reinspeção e descarte. A fronteira descreve os pontos avaliados e não foi usada para escolher limiares ou pesos.
+
 ## Instalação e reprodução
 
 Use Python 3.12. Para a reprodução Windows publicada, as versões instaladas estão registradas no [ambiente da execução](docs/results/reprodutibilidade/environment.json). O [requirements.txt](requirements.txt) lista as dependências sem travar todas as versões. Diferenças de plataforma e bibliotecas podem alterar valores numéricos.
@@ -151,6 +170,24 @@ python -m src.stage9_experiments final --selection results/stage9/selection_knn_
 ```
 
 Os manifestos de execução usam IDs absolutos e os artefatos assinados registram hashes dos bytes dos arquivos, incluindo fontes. Gere os artefatos encadeados no mesmo checkout. Para conferir a publicação, use os manifestos portáteis de `docs/results/` e compare os IDs relativos e os SHA-256. [Proveniência e checksums](docs/results/README.md)
+
+### Reproduzir as análises complementares
+
+Execute na raiz com o ambiente e as variáveis da seção de instalação. No PowerShell, troque `python` por `& $Py`.
+
+**Com os scores publicados**, reproduza a análise de custo sem dataset, sem cache e sem ajuste:
+
+```text
+python -m src.stage9_threshold_cost --scores docs/results/analises_complementares/operating_points_v1/scores.csv --out results/stage9/threshold_cost_reproduction
+```
+
+**Para recuperar os scores a partir do cache local**, use os manifestos e os artefatos de seleção e avaliação gerados pelos comandos anteriores. Esta etapa reajusta somente as cinco configurações congeladas, uma vez por modelo, sem busca de hiperparâmetros. Use um destino novo para preservar os artefatos existentes.
+
+```text
+python -m src.stage9_operating_points --out results/stage9/operating_points_reproduction
+```
+
+A consulta no [notebook 04](notebooks/04_avaliacao_classica.ipynb) usa apenas os resultados publicados também para essas duas análises.
 
 ## Estrutura do repositório
 

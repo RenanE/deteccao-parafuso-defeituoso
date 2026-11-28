@@ -1,0 +1,674 @@
+{
+  "exploratoria": true,
+  "fit_seed": 42,
+  "particoes": {
+    "fit": 256,
+    "calibration": 64,
+    "sel_defects": 58,
+    "sel_goods": 20,
+    "hold_defects": 61,
+    "hold_goods": 21
+  },
+  "inputs_sha256": {
+    "results/stage9/roi_cache_v1.npz": "bbe59b12fdf50799c7b556dd531a995f2015d7005bda91eee26d45bcb26ef462",
+    "results/stage9/defect_split_v1.json": "7491a5de46652b28c63f1fe0071ba4d7b6beb755e6ce506ddda282d65533b3fd",
+    "results/stage3/study_v1/inventory.json": "5bc190fa7d63789baaa945308ab034fb077dd4d9511f667839aa796f5e3ea679",
+    "results/stage3/study_v1/outer_manifest.json": "441f5a5b84bd29ac0d98a71d6d4ad3571ac9351ab678f249c1459bc868d779f8",
+    "results/stage3/study_v1/internal_manifest.json": "9b33f30b930c9f0e16354e7b0345f66db02dde4c8f0ab3cd546b9be6cc85994f",
+    "results/stage9/selection_v1/selection.json": "8326f7ac8d9ed9fa14d1f82e1a11f79b4147a8f0d0fd24cd0e6502837cf5c522",
+    "results/stage9/final_v1/holdout_evaluation.json": "136b068395f1919832c4c8f36fb6adf8b0513d3bf0426595b43b50867d8bdf86",
+    "results/stage9/final_v1/predictions.csv": "9ce3495ddaf0e5845c2b4cc474f4609bae658e383e3f426c8e8b200902944685",
+    "results/stage9/selection_knn_mahalanobis_v1/selection.json": "cd321d4c85fdff9676fe8d5199fbe5ee82d98205b5aa65582f8fc649825e73a3",
+    "results/stage9/final_knn_mahalanobis_v1/holdout_evaluation.json": "e3242e99cf97cc9030ec3c66cfc3fb4681a11522d19091a7601e032c83a55cd0",
+    "results/stage9/final_knn_mahalanobis_v1/predictions.csv": "3598180aeac67b72f6ca74c91a77b6fd4acad66abdc6de1614813135ca83f720"
+  },
+  "verificacao_original": {
+    "svm": {
+      "selection_auc": 0.9744073275862069,
+      "selection_recall_original": 0.9310344827586207,
+      "auc_reservadas_vs_defeitos_holdout": 0.9344262295081966,
+      "holdout_score_max_abs_error": 0.0,
+      "threshold_abs_error": 0.0
+    },
+    "lof": {
+      "selection_auc": 0.9841056034482758,
+      "selection_recall_original": 0.9310344827586207,
+      "auc_reservadas_vs_defeitos_holdout": 0.985655737704918,
+      "holdout_score_max_abs_error": 0.0,
+      "threshold_abs_error": 0.0
+    },
+    "isolation_forest": {
+      "selection_auc": 0.9480064655172413,
+      "selection_recall_original": 0.7931034482758621,
+      "auc_reservadas_vs_defeitos_holdout": 0.915983606557377,
+      "holdout_score_max_abs_error": 0.0,
+      "threshold_abs_error": 0.0
+    },
+    "knn": {
+      "selection_auc": 0.9827586206896551,
+      "selection_recall_original": 0.9310344827586207,
+      "auc_reservadas_vs_defeitos_holdout": 0.9841188524590163,
+      "holdout_score_max_abs_error": 0.0,
+      "threshold_abs_error": 0.0
+    },
+    "mahalanobis": {
+      "selection_auc": 0.9754849137931034,
+      "selection_recall_original": 0.9137931034482759,
+      "auc_reservadas_vs_defeitos_holdout": 0.9649077868852459,
+      "holdout_score_max_abs_error": 0.0,
+      "threshold_abs_error": 0.0
+    }
+  },
+  "pontos": {
+    "svm": {
+      "original": {
+        "threshold": 3.405449435434655,
+        "calibration_fpr": 0.046875,
+        "selection_tp": 54,
+        "selection_recall": 0.9310344827586207,
+        "tp": 50,
+        "tn": 20,
+        "fp": 1,
+        "fn": 11,
+        "recall_defeitos": 0.819672131147541,
+        "especificidade": 0.9523809523809523,
+        "auc_holdout": 0.9000780640124902,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 10,
+            "recall": 0.8333333333333334
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 6,
+            "recall": 0.5
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 9,
+            "recall": 0.75
+          }
+        }
+      },
+      "selection_95": {
+        "threshold": 2.9743633652388635,
+        "calibration_fpr": 0.21875,
+        "selection_tp": 56,
+        "selection_recall": 0.9655172413793104,
+        "tp": 55,
+        "tn": 15,
+        "fp": 6,
+        "fn": 6,
+        "recall_defeitos": 0.9016393442622951,
+        "especificidade": 0.7142857142857143,
+        "auc_holdout": 0.9000780640124902,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 8,
+            "recall": 0.6666666666666666
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 10,
+            "recall": 0.8333333333333334
+          }
+        }
+      },
+      "selection_100": {
+        "threshold": 2.810902337665996,
+        "calibration_fpr": 0.296875,
+        "selection_tp": 58,
+        "selection_recall": 1.0,
+        "tp": 55,
+        "tn": 12,
+        "fp": 9,
+        "fn": 6,
+        "recall_defeitos": 0.9016393442622951,
+        "especificidade": 0.5714285714285714,
+        "auc_holdout": 0.9000780640124902,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 8,
+            "recall": 0.6666666666666666
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 10,
+            "recall": 0.8333333333333334
+          }
+        }
+      }
+    },
+    "lof": {
+      "original": {
+        "threshold": 4.8906792004903155,
+        "calibration_fpr": 0.046875,
+        "selection_tp": 54,
+        "selection_recall": 0.9310344827586207,
+        "tp": 58,
+        "tn": 18,
+        "fp": 3,
+        "fn": 3,
+        "recall_defeitos": 0.9508196721311475,
+        "especificidade": 0.8571428571428571,
+        "auc_holdout": 0.9555035128805621,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 12,
+            "recall": 0.9230769230769231
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 11,
+            "recall": 0.9166666666666666
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 11,
+            "recall": 0.9166666666666666
+          }
+        }
+      },
+      "selection_95": {
+        "threshold": 4.533249974250793,
+        "calibration_fpr": 0.125,
+        "selection_tp": 56,
+        "selection_recall": 0.9655172413793104,
+        "tp": 59,
+        "tn": 17,
+        "fp": 4,
+        "fn": 2,
+        "recall_defeitos": 0.9672131147540983,
+        "especificidade": 0.8095238095238095,
+        "auc_holdout": 0.9555035128805621,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 12,
+            "recall": 0.9230769230769231
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 11,
+            "recall": 0.9166666666666666
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          }
+        }
+      },
+      "selection_100": {
+        "threshold": 4.201766689618427,
+        "calibration_fpr": 0.1875,
+        "selection_tp": 58,
+        "selection_recall": 1.0,
+        "tp": 60,
+        "tn": 16,
+        "fp": 5,
+        "fn": 1,
+        "recall_defeitos": 0.9836065573770492,
+        "especificidade": 0.7619047619047619,
+        "auc_holdout": 0.9555035128805621,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 12,
+            "recall": 0.9230769230769231
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          }
+        }
+      }
+    },
+    "isolation_forest": {
+      "original": {
+        "threshold": 4.520210631018026,
+        "calibration_fpr": 0.046875,
+        "selection_tp": 46,
+        "selection_recall": 0.7931034482758621,
+        "tp": 42,
+        "tn": 21,
+        "fp": 0,
+        "fn": 19,
+        "recall_defeitos": 0.6885245901639344,
+        "especificidade": 1.0,
+        "auc_holdout": 0.9125683060109289,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 6,
+            "recall": 0.5
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 12,
+            "recall": 0.9230769230769231
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 4,
+            "recall": 0.3333333333333333
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 8,
+            "recall": 0.6666666666666666
+          }
+        }
+      },
+      "selection_95": {
+        "threshold": 2.985022554908372,
+        "calibration_fpr": 0.5,
+        "selection_tp": 56,
+        "selection_recall": 0.9655172413793104,
+        "tp": 59,
+        "tn": 10,
+        "fp": 11,
+        "fn": 2,
+        "recall_defeitos": 0.9672131147540983,
+        "especificidade": 0.47619047619047616,
+        "auc_holdout": 0.9125683060109289,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 11,
+            "recall": 0.9166666666666666
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 11,
+            "recall": 0.9166666666666666
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          }
+        }
+      },
+      "selection_100": {
+        "threshold": 2.861108042564269,
+        "calibration_fpr": 0.65625,
+        "selection_tp": 58,
+        "selection_recall": 1.0,
+        "tp": 59,
+        "tn": 9,
+        "fp": 12,
+        "fn": 2,
+        "recall_defeitos": 0.9672131147540983,
+        "especificidade": 0.42857142857142855,
+        "auc_holdout": 0.9125683060109289,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 11,
+            "recall": 0.9166666666666666
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 11,
+            "recall": 0.9166666666666666
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          }
+        }
+      }
+    },
+    "knn": {
+      "original": {
+        "threshold": 4.479041124781003,
+        "calibration_fpr": 0.046875,
+        "selection_tp": 54,
+        "selection_recall": 0.9310344827586207,
+        "tp": 55,
+        "tn": 20,
+        "fp": 1,
+        "fn": 6,
+        "recall_defeitos": 0.9016393442622951,
+        "especificidade": 0.9523809523809523,
+        "auc_holdout": 0.9578454332552693,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 10,
+            "recall": 0.8333333333333334
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 9,
+            "recall": 0.75
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 11,
+            "recall": 0.9166666666666666
+          }
+        }
+      },
+      "selection_95": {
+        "threshold": 4.230606501581153,
+        "calibration_fpr": 0.0625,
+        "selection_tp": 56,
+        "selection_recall": 0.9655172413793104,
+        "tp": 58,
+        "tn": 19,
+        "fp": 2,
+        "fn": 3,
+        "recall_defeitos": 0.9508196721311475,
+        "especificidade": 0.9047619047619048,
+        "auc_holdout": 0.9578454332552693,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 9,
+            "recall": 0.75
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          }
+        }
+      },
+      "selection_100": {
+        "threshold": 3.081793614945271,
+        "calibration_fpr": 0.4375,
+        "selection_tp": 58,
+        "selection_recall": 1.0,
+        "tp": 61,
+        "tn": 11,
+        "fp": 10,
+        "fn": 0,
+        "recall_defeitos": 1.0,
+        "especificidade": 0.5238095238095238,
+        "auc_holdout": 0.9578454332552693,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          }
+        }
+      }
+    },
+    "mahalanobis": {
+      "original": {
+        "threshold": 6.262524021463676,
+        "calibration_fpr": 0.046875,
+        "selection_tp": 53,
+        "selection_recall": 0.9137931034482759,
+        "tp": 50,
+        "tn": 19,
+        "fp": 2,
+        "fn": 11,
+        "recall_defeitos": 0.819672131147541,
+        "especificidade": 0.9047619047619048,
+        "auc_holdout": 0.9141295862607338,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 6,
+            "recall": 0.5
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 11,
+            "recall": 0.9166666666666666
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 8,
+            "recall": 0.6666666666666666
+          }
+        }
+      },
+      "selection_95": {
+        "threshold": 5.680785781046366,
+        "calibration_fpr": 0.0625,
+        "selection_tp": 56,
+        "selection_recall": 0.9655172413793104,
+        "tp": 52,
+        "tn": 18,
+        "fp": 3,
+        "fn": 9,
+        "recall_defeitos": 0.8524590163934426,
+        "especificidade": 0.8571428571428571,
+        "auc_holdout": 0.9141295862607338,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 8,
+            "recall": 0.6666666666666666
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 11,
+            "recall": 0.9166666666666666
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 8,
+            "recall": 0.6666666666666666
+          }
+        }
+      },
+      "selection_100": {
+        "threshold": 3.6225941407983924,
+        "calibration_fpr": 0.34375,
+        "selection_tp": 58,
+        "selection_recall": 1.0,
+        "tp": 61,
+        "tn": 12,
+        "fp": 9,
+        "fn": 0,
+        "recall_defeitos": 1.0,
+        "especificidade": 0.5714285714285714,
+        "auc_holdout": 0.9141295862607338,
+        "por_categoria": {
+          "manipulated_front": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_head": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "scratch_neck": {
+            "n": 13,
+            "detectados": 13,
+            "recall": 1.0
+          },
+          "thread_side": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          },
+          "thread_top": {
+            "n": 12,
+            "detectados": 12,
+            "recall": 1.0
+          }
+        }
+      }
+    }
+  }
+}
