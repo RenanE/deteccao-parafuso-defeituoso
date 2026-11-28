@@ -13,7 +13,6 @@ não são alterados; este módulo apenas reutiliza suas funções.
 import argparse
 import json
 from pathlib import Path
-import resource
 import time
 
 import joblib
@@ -27,7 +26,8 @@ from .features import HOG_CONFIGS, criar_banco_gabor
 from .lof import LOFAnomalyDetector
 from .model_experiments import (
     REPRESENTATIONS, SELECTION_RULE, TARGET_FPR, choose_provisional, load_development,
-    make_representation, model_array_bytes, protocol_sources, resources, score_summary, summarize,
+    make_representation, model_array_bytes, peak_process_rss_bytes, protocol_sources, resources,
+    score_summary, summarize,
 )
 
 GRID = [{"model": "lof", "parameters": {"n_neighbors": k, "metric": "euclidean"}}
@@ -108,7 +108,7 @@ def compare(study, cache, out):
     report = {"status": "complete", "stage": 6, "protocol_signature": signature(protocol), "rows": rows,
               "skipped": [], "summary": summaries, "selection_rule": SELECTION_RULE,
               "wall_seconds": time.perf_counter() - start_total,
-              "peak_process_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+              "peak_process_rss_bytes": peak_process_rss_bytes(),
               "limitations": "Somente normais; três repetições correlacionadas; sem estimativa de recall."}
     save_json(dest / "comparison.json", report)
     with (dest / "summary.csv").open("x", newline="") as stream:
@@ -130,7 +130,7 @@ def finalize(study, cache, selection_path, out, *, confirm=False):
     if Path(out).exists() or Path(out).is_symlink():
         raise FileExistsError(f"Destino existente: {out}")
     selection_path = Path(selection_path)
-    selection = json.loads(selection_path.read_text())
+    selection = json.loads(selection_path.read_text(encoding="utf-8"))
     if signature({k: v for k, v in selection.items() if k != "signature"}) != selection["signature"]:
         raise ValueError("Seleção alterada; assinatura inválida.")
     if selection["sources"] != lof_sources():

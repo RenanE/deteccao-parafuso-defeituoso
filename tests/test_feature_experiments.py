@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 
 from src.feature_experiments import (
-    compare_study, extract_study, file_hash, load_features, load_study, prepare_study,
+    audit_dataset, compare_study, extract_study, file_hash, load_features, load_study, prepare_study,
 )
 from src.features import HOG_CONFIGS
 
@@ -91,11 +91,19 @@ class ExperimentTests(unittest.TestCase):
         old = self.data / "processed/features_train.csv"
         old.parent.mkdir()
         old.write_text("classe,feat_0\ngood,1\n")
-        prepare_study(self.data, self.root / "with_old", train_flat_is_good=True)
+        original = old.read_bytes()
+
+        def audit_fixture(data_dir, inventory):
+            with patch("src.feature_experiments.ROOT", self.root / "project"):
+                return audit_dataset(data_dir, inventory)
+
+        with patch("src.feature_experiments.audit_dataset", side_effect=audit_fixture):
+            prepare_study(self.data, self.root / "with_old", train_flat_is_good=True)
         audit = json.loads((self.root / "with_old/audit.json").read_text())
         self.assertEqual(len(audit["historical_csvs"]), 1)
+        self.assertEqual(audit["historical_csvs"][0]["path"], str(old.resolve()))
         self.assertEqual(audit["historical_csvs"][0]["feature_columns"], 1)
-        self.assertEqual(old.read_text(), "classe,feat_0\ngood,1\n")
+        self.assertEqual(old.read_bytes(), original)
 
     def test_comparacao_sintetica_reprodutivel_sem_vencedor(self):
         cache = self.full_cache()

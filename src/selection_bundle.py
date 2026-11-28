@@ -21,13 +21,13 @@ from .model_experiments import (
 
 def read_signed_selection(path):
     path = Path(path).resolve()
-    selection = json.loads(path.read_text())
+    selection = json.loads(path.read_text(encoding="utf-8"))
     if selection["signature"] != signature({k: v for k, v in selection.items() if k != "signature"}):
         raise ValueError("Assinatura da seleção inválida.")
     comparison = path.parent / "comparison.json"
     if file_hash(comparison) != selection["comparison_sha256"]:
         raise ValueError("Relatório de origem alterado.")
-    return selection, json.loads(comparison.read_text()), comparison
+    return selection, json.loads(comparison.read_text(encoding="utf-8")), comparison
 
 
 def prepare_bundle(study, cache, stage4, stage5, out):

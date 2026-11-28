@@ -29,7 +29,7 @@ def finalize(study, cache, selection_path, out, *, model_name, confirm=False):
     if Path(out).exists() or Path(out).is_symlink():
         raise FileExistsError(f"Destino existente: {out}")
     selection_path = Path(selection_path)
-    selection = json.loads(selection_path.read_text())
+    selection = json.loads(selection_path.read_text(encoding="utf-8"))
     unsigned = {k: v for k, v in selection.items() if k != "signature"}
     if signature(unsigned) != selection["signature"]:
         raise ValueError("Seleção alterada; assinatura inválida.")

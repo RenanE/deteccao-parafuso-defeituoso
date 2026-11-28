@@ -151,7 +151,7 @@ class Stage5ProtocolTests(unittest.TestCase):
             self.assertEqual(a['validation_scores'],b['validation_scores'])
             self.assertEqual(a['threshold'],b['threshold'])
             self.assertTrue('numerical_diagnostics' in a)
-        selection=json.loads((self.root/'first/selection.json').read_text())
+        selection=json.loads((self.root/'first/selection.json').read_text(encoding="utf-8"))
         self.assertEqual(selection['selected']['mahalanobis']['parameters']['covariance'],'ledoit_wolf')
         with self.assertRaises(FileExistsError):self.compare5(self.root/'first')
 
@@ -160,9 +160,9 @@ class Stage5ProtocolTests(unittest.TestCase):
         self.compare4(old);self.compare5(new)
         hashes={str(p):file_hash(p) for folder in (old,new,self.study) for p in folder.iterdir() if p.is_file()}
         merged=prepare_bundle(self.study,self.cache,old/'selection.json',new/'selection.json',self.root/'merged')
-        selection=json.loads((merged/'selection.json').read_text())
+        selection=json.loads((merged/'selection.json').read_text(encoding="utf-8"))
         self.assertEqual(set(selection['selected']),{'svm','knn','mahalanobis','isolation_forest'})
-        self.assertEqual(selection['selected']['svm'],json.loads((old/'selection.json').read_text())['selected']['svm'])
+        self.assertEqual(selection['selected']['svm'],json.loads((old/'selection.json').read_text(encoding="utf-8"))['selected']['svm'])
         self.assertTrue(all(file_hash(p)==h for p,h in hashes.items()))
         for model in ('mahalanobis','isolation_forest'):
             with self.assertRaisesRegex(ValueError,'confirm-final'):
@@ -180,7 +180,7 @@ class Stage5ProtocolTests(unittest.TestCase):
     def test_migracao_nao_aceita_mudanca_metodologica(self):
         old,new=self.root/'old',self.root/'new'
         self.compare4(old);self.compare5(new)
-        p=old/'selection.json';s=json.loads(p.read_text())
+        p=old/'selection.json';s=json.loads(p.read_text(encoding="utf-8"))
         s['sources']['knn.py']='0'*64
         s['signature']=signature({k:v for k,v in s.items() if k!='signature'})
         p.write_text(json.dumps(s))

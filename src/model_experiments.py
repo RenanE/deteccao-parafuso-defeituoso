@@ -3,7 +3,6 @@
 import argparse
 import json
 from pathlib import Path
-import resource
 import shutil
 import time
 
@@ -101,6 +100,14 @@ def resources():
                           if line.startswith("MemAvailable:"))) * 1024
     return {"available_memory_bytes": memory, "disk_free_bytes": shutil.disk_usage(ROOT).free,
             "estimated_working_budget_bytes": 1024 ** 3, "estimated_disk_budget_bytes": 256 * 1024 ** 2}
+
+
+def peak_process_rss_bytes():
+    try:
+        import resource
+    except ImportError:
+        return None
+    return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
 
 
 def score_summary(scores):
@@ -271,7 +278,7 @@ def compare_models(study, cache, out, *, pilot=False, stage=4):
         report = {"status": "complete", "stage": stage, "pilot": pilot, "protocol_signature": signature(protocol),
                   "rows": rows, "skipped": skipped, "summary": summaries, "selection_rule": SELECTION_RULE,
                   "wall_seconds": time.perf_counter() - start_total,
-                  "peak_process_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024,
+                  "peak_process_rss_bytes": peak_process_rss_bytes(),
                   "memory_note": "Arrays retidos aproximados por configuração; RSS máximo do processo inteiro, Linux.",
                   "limitations": "Somente normais; três repetições correlacionadas; seleção pós-etapa 3, sem estimativa imparcial de recall."}
         save_json(dest / "comparison.json", report)
