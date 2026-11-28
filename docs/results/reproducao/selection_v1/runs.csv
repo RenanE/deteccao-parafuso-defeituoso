@@ -1,0 +1,177 @@
+tag,config,model,params,patch,descriptors,neighbors,aggregation,dim,auc_sel,recall95_sel,seconds
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 10}",24,hog+lbp+gabor+edges+shape,1,max,62,0.9738685344827587,0.9482758620689655,3.866825900040567
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 10}",24,hog+lbp+gabor+edges+shape,1,top3,62,0.9816810344827587,0.9655172413793104,3.869779100175947
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 20}",24,hog+lbp+gabor+edges+shape,1,max,62,0.9776400862068966,0.9655172413793104,4.056107999989763
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 20}",24,hog+lbp+gabor+edges+shape,1,top3,62,0.9830280172413792,0.9655172413793104,4.060079000191763
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 40}",24,hog+lbp+gabor+edges+shape,1,max,62,0.9781788793103449,0.9310344827586207,4.910177499987185
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 40}",24,hog+lbp+gabor+edges+shape,1,top3,62,0.9830280172413793,0.9655172413793104,4.913194400025532
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",24,hog+lbp+gabor+edges+shape,1,max,62,0.9164870689655171,0.7241379310344828,47.92770629981533
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",24,hog+lbp+gabor+edges+shape,1,top3,62,0.9296875,0.7758620689655172,47.93077909993008
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",24,hog+lbp+gabor+edges+shape,1,max,62,0.9334590517241379,0.7586206896551724,48.80029290006496
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",24,hog+lbp+gabor+edges+shape,1,top3,62,0.9431573275862069,0.7931034482758621,48.802891599945724
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.05}",24,hog+lbp+gabor+edges+shape,1,max,62,0.9630926724137931,0.896551724137931,3.0726046999916434
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.05}",24,hog+lbp+gabor+edges+shape,1,top3,62,0.9744073275862069,0.9310344827586207,3.0752715000417084
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.1}",24,hog+lbp+gabor+edges+shape,1,max,62,0.9585129310344828,0.8275862068965517,3.624985500006005
+grade,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.1}",24,hog+lbp+gabor+edges+shape,1,top3,62,0.9709051724137931,0.8793103448275862,3.632265300024301
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 10}",24,hog+lbp+gabor+edges+shape,2,max,62,0.9665948275862069,0.896551724137931,12.517170500010252
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 10}",24,hog+lbp+gabor+edges+shape,2,top3,62,0.974676724137931,0.9310344827586207,12.519148500170559
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 20}",24,hog+lbp+gabor+edges+shape,2,max,62,0.9606681034482758,0.896551724137931,13.311493700137362
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 20}",24,hog+lbp+gabor+edges+shape,2,top3,62,0.9682112068965517,0.9310344827586207,13.314242399996147
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 40}",24,hog+lbp+gabor+edges+shape,2,max,62,0.9544719827586208,0.896551724137931,16.03739789989777
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 40}",24,hog+lbp+gabor+edges+shape,2,top3,62,0.9641702586206897,0.9137931034482759,16.04080759990029
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",24,hog+lbp+gabor+edges+shape,2,max,62,0.880657327586207,0.6724137931034483,48.47985430015251
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",24,hog+lbp+gabor+edges+shape,2,top3,62,0.8723060344827587,0.6206896551724138,48.482603600015864
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",24,hog+lbp+gabor+edges+shape,2,max,62,0.8876616379310345,0.6896551724137931,50.28608760004863
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",24,hog+lbp+gabor+edges+shape,2,top3,62,0.8782327586206896,0.6551724137931034,50.290663399966434
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.05}",24,hog+lbp+gabor+edges+shape,2,max,62,0.9283405172413792,0.7758620689655172,11.852055599913001
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.05}",24,hog+lbp+gabor+edges+shape,2,top3,62,0.9358836206896552,0.8103448275862069,11.854277399834245
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.1}",24,hog+lbp+gabor+edges+shape,2,max,62,0.9175646551724138,0.7586206896551724,18.87934420001693
+grade,P24-hog+lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.1}",24,hog+lbp+gabor+edges+shape,2,top3,62,0.9291487068965517,0.7758620689655172,18.881943400017917
+grade,P24-lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 10}",24,lbp+gabor+edges+shape,1,max,26,0.9579741379310345,0.6206896551724138,2.4435704997740686
+grade,P24-lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 10}",24,lbp+gabor+edges+shape,1,top3,26,0.974676724137931,0.7931034482758621,2.446654399856925
+grade,P24-lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 20}",24,lbp+gabor+edges+shape,1,max,26,0.9558189655172413,0.6724137931034483,2.970170099986717
+grade,P24-lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 20}",24,lbp+gabor+edges+shape,1,top3,26,0.9679418103448276,0.7931034482758621,2.9734194001648575
+grade,P24-lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 40}",24,lbp+gabor+edges+shape,1,max,26,0.9509698275862069,0.7068965517241379,3.5884936000220478
+grade,P24-lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 40}",24,lbp+gabor+edges+shape,1,top3,26,0.9585129310344828,0.8103448275862069,3.5960623000282794
+grade,P24-lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",24,lbp+gabor+edges+shape,1,max,26,0.9237607758620688,0.8103448275862069,47.942707099951804
+grade,P24-lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",24,lbp+gabor+edges+shape,1,top3,26,0.9396551724137931,0.8103448275862069,47.94537499989383
+grade,P24-lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",24,lbp+gabor+edges+shape,1,max,26,0.9291487068965517,0.8103448275862069,49.502033999888226
+grade,P24-lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",24,lbp+gabor+edges+shape,1,top3,26,0.9480064655172413,0.7931034482758621,49.505271799862385
+grade,P24-lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.05}",24,lbp+gabor+edges+shape,1,max,26,0.9299568965517241,0.7931034482758621,2.05850340006873
+grade,P24-lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.05}",24,lbp+gabor+edges+shape,1,top3,26,0.9477370689655172,0.8103448275862069,2.061348999850452
+grade,P24-lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.1}",24,lbp+gabor+edges+shape,1,max,26,0.9221443965517242,0.7413793103448276,2.9607205998618156
+grade,P24-lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.1}",24,lbp+gabor+edges+shape,1,top3,26,0.943426724137931,0.8448275862068966,2.963337399996817
+grade,P24-lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 10}",24,lbp+gabor+edges+shape,2,max,26,0.919989224137931,0.6724137931034483,9.691693000029773
+grade,P24-lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 10}",24,lbp+gabor+edges+shape,2,top3,26,0.9496228448275863,0.896551724137931,9.694729200098664
+grade,P24-lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 20}",24,lbp+gabor+edges+shape,2,max,26,0.915948275862069,0.6724137931034483,10.390244500013068
+grade,P24-lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 20}",24,lbp+gabor+edges+shape,2,top3,26,0.9388469827586208,0.6724137931034483,10.392708099912852
+grade,P24-lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 40}",24,lbp+gabor+edges+shape,2,max,26,0.9073275862068966,0.5517241379310345,13.520640400005504
+grade,P24-lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 40}",24,lbp+gabor+edges+shape,2,top3,26,0.9226831896551724,0.6379310344827587,13.523704499937594
+grade,P24-lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",24,lbp+gabor+edges+shape,2,max,26,0.8906249999999999,0.6379310344827587,48.941028400091454
+grade,P24-lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",24,lbp+gabor+edges+shape,2,top3,26,0.90625,0.6206896551724138,48.94704120000824
+grade,P24-lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",24,lbp+gabor+edges+shape,2,max,26,0.8876616379310346,0.6551724137931034,49.48146539996378
+grade,P24-lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",24,lbp+gabor+edges+shape,2,top3,26,0.9084051724137931,0.6206896551724138,49.48617129982449
+grade,P24-lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.05}",24,lbp+gabor+edges+shape,2,max,26,0.8564116379310345,0.5689655172413793,6.621419600211084
+grade,P24-lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.05}",24,lbp+gabor+edges+shape,2,top3,26,0.8793103448275864,0.6206896551724138,6.624545800033957
+grade,P24-lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.1}",24,lbp+gabor+edges+shape,2,max,26,0.8582974137931034,0.5862068965517241,11.162816900061443
+grade,P24-lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.1}",24,lbp+gabor+edges+shape,2,top3,26,0.8779633620689656,0.6206896551724138,11.165654900018126
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 10}",32,hog+lbp+gabor+edges+shape,1,max,62,0.9787176724137931,0.9482758620689655,2.218089299974963
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 10}",32,hog+lbp+gabor+edges+shape,1,top3,62,0.9841056034482758,0.9310344827586207,2.221097500063479
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 20}",32,hog+lbp+gabor+edges+shape,1,max,62,0.9803340517241379,0.9482758620689655,2.6233423999510705
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 20}",32,hog+lbp+gabor+edges+shape,1,top3,62,0.9811422413793104,0.8793103448275862,2.626817899988964
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 40}",32,hog+lbp+gabor+edges+shape,1,max,62,0.9787176724137931,0.896551724137931,2.988537799799815
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 40}",32,hog+lbp+gabor+edges+shape,1,top3,62,0.9773706896551724,0.8793103448275862,2.9921236999798566
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",32,hog+lbp+gabor+edges+shape,1,max,62,0.8884698275862069,0.7241379310344828,31.72401689994149
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",32,hog+lbp+gabor+edges+shape,1,top3,62,0.8995150862068966,0.6206896551724138,31.72632550005801
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",32,hog+lbp+gabor+edges+shape,1,max,62,0.9170258620689655,0.8275862068965517,24.526124099968
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",32,hog+lbp+gabor+edges+shape,1,top3,62,0.9148706896551725,0.6551724137931034,24.528377700131387
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.05}",32,hog+lbp+gabor+edges+shape,1,max,62,0.9455818965517242,0.8620689655172413,1.2848111998755485
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.05}",32,hog+lbp+gabor+edges+shape,1,top3,62,0.946928879310345,0.8448275862068966,1.2879933998920023
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.1}",32,hog+lbp+gabor+edges+shape,1,max,62,0.9436961206896551,0.8620689655172413,1.5217206999659538
+grade,P32-hog+lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.1}",32,hog+lbp+gabor+edges+shape,1,top3,62,0.9428879310344829,0.8275862068965517,1.5235254000872374
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 10}",32,hog+lbp+gabor+edges+shape,2,max,62,0.9644396551724138,0.8793103448275862,5.071894200053066
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 10}",32,hog+lbp+gabor+edges+shape,2,top3,62,0.9671336206896551,0.8620689655172413,5.073724400019273
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 20}",32,hog+lbp+gabor+edges+shape,2,max,62,0.9582435344827587,0.8103448275862069,6.183001599973068
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 20}",32,hog+lbp+gabor+edges+shape,2,top3,62,0.9582435344827587,0.8103448275862069,6.185248699970543
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 40}",32,hog+lbp+gabor+edges+shape,2,max,62,0.9404633620689655,0.7068965517241379,7.126195900142193
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 40}",32,hog+lbp+gabor+edges+shape,2,top3,62,0.9412715517241379,0.7241379310344828,7.130566900130361
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",32,hog+lbp+gabor+edges+shape,2,max,62,0.8135775862068966,0.5344827586206896,22.80355959990993
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",32,hog+lbp+gabor+edges+shape,2,top3,62,0.8273168103448275,0.5172413793103449,22.80541120003909
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",32,hog+lbp+gabor+edges+shape,2,max,62,0.8289331896551724,0.41379310344827586,24.512144800042734
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",32,hog+lbp+gabor+edges+shape,2,top3,62,0.8620689655172413,0.46551724137931033,24.513960000127554
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.05}",32,hog+lbp+gabor+edges+shape,2,max,62,0.8429418103448276,0.6206896551724138,5.176906199892983
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.05}",32,hog+lbp+gabor+edges+shape,2,top3,62,0.826239224137931,0.6206896551724138,5.178811499848962
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.1}",32,hog+lbp+gabor+edges+shape,2,max,62,0.8445581896551723,0.6206896551724138,7.586008199956268
+grade,P32-hog+lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.1}",32,hog+lbp+gabor+edges+shape,2,top3,62,0.8270474137931033,0.603448275862069,7.588133599841967
+grade,P32-lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 10}",32,lbp+gabor+edges+shape,1,max,26,0.9498922413793104,0.6724137931034483,0.994718800066039
+grade,P32-lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 10}",32,lbp+gabor+edges+shape,1,top3,26,0.9542025862068966,0.7931034482758621,0.9994856000412256
+grade,P32-lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 20}",32,lbp+gabor+edges+shape,1,max,26,0.9401939655172413,0.6724137931034483,1.2009113999083638
+grade,P32-lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 20}",32,lbp+gabor+edges+shape,1,top3,26,0.9463900862068966,0.7413793103448276,1.2027104999870062
+grade,P32-lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 40}",32,lbp+gabor+edges+shape,1,max,26,0.927801724137931,0.6896551724137931,1.5088802000973374
+grade,P32-lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 40}",32,lbp+gabor+edges+shape,1,top3,26,0.9361530172413792,0.7068965517241379,1.512778100091964
+grade,P32-lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",32,lbp+gabor+edges+shape,1,max,26,0.8976293103448276,0.5517241379310345,21.768018499948084
+grade,P32-lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",32,lbp+gabor+edges+shape,1,top3,26,0.9027478448275862,0.603448275862069,21.76994979986921
+grade,P32-lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",32,lbp+gabor+edges+shape,1,max,26,0.8995150862068966,0.5689655172413793,22.148626799928024
+grade,P32-lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",32,lbp+gabor+edges+shape,1,top3,26,0.9162176724137931,0.6206896551724138,22.15046239993535
+grade,P32-lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.05}",32,lbp+gabor+edges+shape,1,max,26,0.8900862068965517,0.6896551724137931,0.8521008000243455
+grade,P32-lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.05}",32,lbp+gabor+edges+shape,1,top3,26,0.8933189655172413,0.6551724137931034,0.8539542998187244
+grade,P32-lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.1}",32,lbp+gabor+edges+shape,1,max,26,0.8828125,0.6551724137931034,1.2280640001408756
+grade,P32-lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.1}",32,lbp+gabor+edges+shape,1,top3,26,0.8871228448275863,0.6551724137931034,1.2327275001443923
+grade,P32-lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 10}",32,lbp+gabor+edges+shape,2,max,26,0.8599137931034484,0.6379310344827587,3.6795976001303643
+grade,P32-lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 10}",32,lbp+gabor+edges+shape,2,top3,26,0.8723060344827587,0.6551724137931034,3.6820461000315845
+grade,P32-lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 20}",32,lbp+gabor+edges+shape,2,max,26,0.8429418103448275,0.5344827586206896,4.157637000083923
+grade,P32-lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 20}",32,lbp+gabor+edges+shape,2,top3,26,0.8545258620689656,0.5689655172413793,4.1596369000617415
+grade,P32-lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 40}",32,lbp+gabor+edges+shape,2,max,26,0.8413254310344827,0.5,5.291503299959004
+grade,P32-lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 40}",32,lbp+gabor+edges+shape,2,top3,26,0.8491379310344828,0.5344827586206896,5.293265999993309
+grade,P32-lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",32,lbp+gabor+edges+shape,2,max,26,0.863146551724138,0.5344827586206896,22.06899749999866
+grade,P32-lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",32,lbp+gabor+edges+shape,2,top3,26,0.8693426724137931,0.5172413793103449,22.073141099885106
+grade,P32-lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",32,lbp+gabor+edges+shape,2,max,26,0.8626077586206895,0.5689655172413793,23.037161400076002
+grade,P32-lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",32,lbp+gabor+edges+shape,2,top3,26,0.8685344827586207,0.46551724137931033,23.041552199982107
+grade,P32-lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.05}",32,lbp+gabor+edges+shape,2,max,26,0.7494612068965517,0.5344827586206896,2.8550450999755412
+grade,P32-lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.05}",32,lbp+gabor+edges+shape,2,top3,26,0.7664331896551724,0.5344827586206896,2.8595157999079674
+grade,P32-lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.1}",32,lbp+gabor+edges+shape,2,max,26,0.7561961206896552,0.5517241379310345,5.075954800006002
+grade,P32-lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.1}",32,lbp+gabor+edges+shape,2,top3,26,0.7685883620689655,0.5172413793103449,5.082437300123274
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 10}",48,hog+lbp+gabor+edges+shape,1,max,62,0.9612068965517242,0.9137931034482759,0.49432629998773336
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 10}",48,hog+lbp+gabor+edges+shape,1,top3,62,0.9730603448275863,0.896551724137931,0.49626390007324517
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 20}",48,hog+lbp+gabor+edges+shape,1,max,62,0.9490840517241379,0.7586206896551724,0.526874199975282
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 20}",48,hog+lbp+gabor+edges+shape,1,top3,62,0.9579741379310345,0.8275862068965517,0.5303303999826312
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 40}",48,hog+lbp+gabor+edges+shape,1,max,62,0.9272629310344828,0.6551724137931034,0.6429117999505252
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 40}",48,hog+lbp+gabor+edges+shape,1,top3,62,0.9342672413793103,0.7068965517241379,0.644595299847424
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",48,hog+lbp+gabor+edges+shape,1,max,62,0.8356681034482759,0.3620689655172414,8.171632000012323
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",48,hog+lbp+gabor+edges+shape,1,top3,62,0.8367456896551724,0.3793103448275862,8.174879499943927
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",48,hog+lbp+gabor+edges+shape,1,max,62,0.8410560344827587,0.5344827586206896,8.45010680006817
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",48,hog+lbp+gabor+edges+shape,1,top3,62,0.8450969827586208,0.5344827586206896,8.451848099939525
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.05}",48,hog+lbp+gabor+edges+shape,1,max,62,0.8273168103448276,0.43103448275862066,0.3931700000539422
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.05}",48,hog+lbp+gabor+edges+shape,1,top3,62,0.8208512931034484,0.603448275862069,0.3950295001268387
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.1}",48,hog+lbp+gabor+edges+shape,1,max,62,0.8305495689655172,0.46551724137931033,0.49531150003895164
+grade,P48-hog+lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.1}",48,hog+lbp+gabor+edges+shape,1,top3,62,0.8141163793103448,0.5517241379310345,0.49710180005058646
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 10}",48,hog+lbp+gabor+edges+shape,2,max,62,0.9339978448275863,0.7413793103448276,1.3148105000145733
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 10}",48,hog+lbp+gabor+edges+shape,2,top3,62,0.9606681034482758,0.8793103448275862,1.316481500165537
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 20}",48,hog+lbp+gabor+edges+shape,2,max,62,0.9245689655172413,0.6896551724137931,1.5495388000272214
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 20}",48,hog+lbp+gabor+edges+shape,2,top3,62,0.9358836206896552,0.7586206896551724,1.5536392000503838
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 40}",48,hog+lbp+gabor+edges+shape,2,max,62,0.8957435344827587,0.6551724137931034,1.8446730999276042
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 40}",48,hog+lbp+gabor+edges+shape,2,top3,62,0.9119073275862069,0.6724137931034483,1.8463428998365998
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",48,hog+lbp+gabor+edges+shape,2,max,62,0.7359913793103449,0.29310344827586204,8.382444999879226
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",48,hog+lbp+gabor+edges+shape,2,top3,62,0.7424568965517243,0.25862068965517243,8.386287200031802
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",48,hog+lbp+gabor+edges+shape,2,max,62,0.7473060344827587,0.29310344827586204,9.003107199911028
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",48,hog+lbp+gabor+edges+shape,2,top3,62,0.7699353448275862,0.3448275862068966,9.006068699993193
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.05}",48,hog+lbp+gabor+edges+shape,2,max,62,0.7198275862068966,0.39655172413793105,1.2914251000620425
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.05}",48,hog+lbp+gabor+edges+shape,2,top3,62,0.7448814655172413,0.43103448275862066,1.2939450000412762
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.1}",48,hog+lbp+gabor+edges+shape,2,max,62,0.7152478448275862,0.3793103448275862,2.0209198999218643
+grade,P48-hog+lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.1}",48,hog+lbp+gabor+edges+shape,2,top3,62,0.736530172413793,0.3793103448275862,2.025579100009054
+grade,P48-lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 10}",48,lbp+gabor+edges+shape,1,max,26,0.8278556034482758,0.603448275862069,0.3678660001605749
+grade,P48-lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 10}",48,lbp+gabor+edges+shape,1,top3,26,0.845635775862069,0.6896551724137931,0.3700834000483155
+grade,P48-lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 20}",48,lbp+gabor+edges+shape,1,max,26,0.8130387931034483,0.5517241379310345,0.45281440019607544
+grade,P48-lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 20}",48,lbp+gabor+edges+shape,1,top3,26,0.8216594827586206,0.5,0.45513020013459027
+grade,P48-lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 40}",48,lbp+gabor+edges+shape,1,max,26,0.8033405172413793,0.43103448275862066,0.6475734000559896
+grade,P48-lbp+gabor+edges+shape-z1-n1-top3,lof,"{""n_neighbors"": 40}",48,lbp+gabor+edges+shape,1,top3,26,0.8022629310344828,0.5344827586206896,0.6496867001987994
+grade,P48-lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",48,lbp+gabor+edges+shape,1,max,26,0.8186961206896551,0.5,8.166424999944866
+grade,P48-lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",48,lbp+gabor+edges+shape,1,top3,26,0.818426724137931,0.41379310344827586,8.168163599912077
+grade,P48-lbp+gabor+edges+shape-z1-n1-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",48,lbp+gabor+edges+shape,1,max,26,0.828125,0.5862068965517241,8.299923000158742
+grade,P48-lbp+gabor+edges+shape-z1-n1-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",48,lbp+gabor+edges+shape,1,top3,26,0.826239224137931,0.4827586206896552,8.301559500163421
+grade,P48-lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.05}",48,lbp+gabor+edges+shape,1,max,26,0.7467672413793103,0.5344827586206896,0.293128700228408
+grade,P48-lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.05}",48,lbp+gabor+edges+shape,1,top3,26,0.7553879310344828,0.5344827586206896,0.29483500006608665
+grade,P48-lbp+gabor+edges+shape-z1-n1-max,svm,"{""nu"": 0.1}",48,lbp+gabor+edges+shape,1,max,26,0.746228448275862,0.4827586206896552,0.3894537999294698
+grade,P48-lbp+gabor+edges+shape-z1-n1-top3,svm,"{""nu"": 0.1}",48,lbp+gabor+edges+shape,1,top3,26,0.7532327586206895,0.5,0.39132310007698834
+grade,P48-lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 10}",48,lbp+gabor+edges+shape,2,max,26,0.7941810344827587,0.6551724137931034,0.9947587000206113
+grade,P48-lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 10}",48,lbp+gabor+edges+shape,2,top3,26,0.8203125,0.6551724137931034,0.9966295000631362
+grade,P48-lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 20}",48,lbp+gabor+edges+shape,2,max,26,0.7804418103448275,0.6379310344827587,1.156193400034681
+grade,P48-lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 20}",48,lbp+gabor+edges+shape,2,top3,26,0.790948275862069,0.5689655172413793,1.1579766999930143
+grade,P48-lbp+gabor+edges+shape-z1-n2-max,lof,"{""n_neighbors"": 40}",48,lbp+gabor+edges+shape,2,max,26,0.7524245689655173,0.5517241379310345,1.4129746998660266
+grade,P48-lbp+gabor+edges+shape-z1-n2-top3,lof,"{""n_neighbors"": 40}",48,lbp+gabor+edges+shape,2,top3,26,0.7613146551724139,0.5344827586206896,1.414935400011018
+grade,P48-lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",48,lbp+gabor+edges+shape,2,max,26,0.7330280172413793,0.22413793103448276,8.127443900099024
+grade,P48-lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": ""auto"", ""n_estimators"": 200}",48,lbp+gabor+edges+shape,2,top3,26,0.7351831896551725,0.22413793103448276,8.132722400128841
+grade,P48-lbp+gabor+edges+shape-z1-n2-max,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",48,lbp+gabor+edges+shape,2,max,26,0.7432650862068966,0.3275862068965517,8.630865500075743
+grade,P48-lbp+gabor+edges+shape-z1-n2-top3,isolation_forest,"{""max_samples"": 512, ""n_estimators"": 200}",48,lbp+gabor+edges+shape,2,top3,26,0.747844827586207,0.20689655172413793,8.632826599990949
+grade,P48-lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.05}",48,lbp+gabor+edges+shape,2,max,26,0.6721443965517241,0.3793103448275862,0.761380499927327
+grade,P48-lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.05}",48,lbp+gabor+edges+shape,2,top3,26,0.6896551724137931,0.27586206896551724,0.7631830999162048
+grade,P48-lbp+gabor+edges+shape-z1-n2-max,svm,"{""nu"": 0.1}",48,lbp+gabor+edges+shape,2,max,26,0.6694504310344828,0.3620689655172414,1.4006022999528795
+grade,P48-lbp+gabor+edges+shape-z1-n2-top3,svm,"{""nu"": 0.1}",48,lbp+gabor+edges+shape,2,top3,26,0.6864224137931034,0.27586206896551724,1.4046039001550525
+ablacao,P32-hog-z1-n1-max,lof,"{""n_neighbors"": 20}",32,hog,1,max,36,0.9135237068965517,0.7241379310344828,1.2068640000652522
+ablacao,P32-lbp-z1-n1-max,lof,"{""n_neighbors"": 20}",32,lbp,1,max,10,0.572198275862069,0.05172413793103448,2.1722435001283884
+ablacao,P32-gabor-z1-n1-max,lof,"{""n_neighbors"": 20}",32,gabor,1,max,12,0.9630926724137931,0.7413793103448276,1.8955939000006765
+ablacao,P32-edges+shape-z1-n1-max,lof,"{""n_neighbors"": 20}",32,edges+shape,1,max,4,0.50390625,0.0,0.757349600084126
+ablacao,P32-lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 20}",32,lbp+gabor+edges+shape,1,max,26,0.9401939655172413,0.6724137931034483,1.1762336997780949
+ablacao,P32-hog+lbp+gabor+edges+shape-z1-n1-max,lof,"{""n_neighbors"": 20}",32,hog+lbp+gabor+edges+shape,1,max,62,0.9803340517241379,0.9482758620689655,1.4854248999617994
+ablacao_sem_znorm,P32-hog+lbp+gabor+edges+shape-z0-n1-max,lof,"{""n_neighbors"": 20}",32,hog+lbp+gabor+edges+shape,1,max,62,0.9787176724137931,0.8793103448275862,1.5641876000445336
+ablacao_sem_vizinhos,P32-hog+lbp+gabor+edges+shape-z1-n0-max,lof,"{""n_neighbors"": 20}",32,hog+lbp+gabor+edges+shape,0,max,62,0.9528556034482758,0.6551724137931034,0.39078979985788465

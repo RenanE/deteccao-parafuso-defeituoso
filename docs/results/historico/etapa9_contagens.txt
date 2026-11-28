@@ -1,0 +1,2 @@
+selection_ids {'good': 20, 'manipulated_front': 12, 'scratch_head': 12, 'scratch_neck': 12, 'thread_side': 11, 'thread_top': 11}
+holdout_ids {'good': 21, 'scratch_neck': 13, 'manipulated_front': 12, 'scratch_head': 12, 'thread_side': 12, 'thread_top': 12}

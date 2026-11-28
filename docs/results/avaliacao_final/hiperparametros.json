@@ -1,0 +1,52 @@
+{
+  "svm": {
+    "config": "P24-hog+lbp+gabor+edges+shape-z1-n1-top3",
+    "params": "{\"nu\": 0.05}",
+    "patch": 24,
+    "descriptors": "hog+lbp+gabor+edges+shape",
+    "neighbors": 1,
+    "aggregation": "top3",
+    "auc_sel": 0.9744073275862069,
+    "recall95_sel": 0.9310344827586207
+  },
+  "lof": {
+    "config": "P32-hog+lbp+gabor+edges+shape-z1-n1-top3",
+    "params": "{\"n_neighbors\": 10}",
+    "patch": 32,
+    "descriptors": "hog+lbp+gabor+edges+shape",
+    "neighbors": 1,
+    "aggregation": "top3",
+    "auc_sel": 0.9841056034482758,
+    "recall95_sel": 0.9310344827586207
+  },
+  "isolation_forest": {
+    "config": "P24-lbp+gabor+edges+shape-z1-n1-top3",
+    "params": "{\"max_samples\": 512, \"n_estimators\": 200}",
+    "patch": 24,
+    "descriptors": "lbp+gabor+edges+shape",
+    "neighbors": 1,
+    "aggregation": "top3",
+    "auc_sel": 0.9480064655172413,
+    "recall95_sel": 0.7931034482758621
+  },
+  "knn": {
+    "config": "P24-hog+lbp+gabor+edges+shape-z1-n2-top3",
+    "params": "{\"aggregation\": \"mean\", \"metric\": \"euclidean\", \"n_neighbors\": 10}",
+    "patch": 24,
+    "descriptors": "hog+lbp+gabor+edges+shape",
+    "neighbors": 2,
+    "aggregation": "top3",
+    "auc_sel": 0.9827586206896551,
+    "recall95_sel": 0.9310344827586207
+  },
+  "mahalanobis": {
+    "config": "P24-hog+lbp+gabor+edges+shape-z1-n1-top3",
+    "params": "{\"covariance\": \"ledoit_wolf\"}",
+    "patch": 24,
+    "descriptors": "hog+lbp+gabor+edges+shape",
+    "neighbors": 1,
+    "aggregation": "top3",
+    "auc_sel": 0.9754849137931034,
+    "recall95_sel": 0.9137931034482759
+  }
+}

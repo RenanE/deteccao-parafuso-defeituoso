@@ -1,0 +1,4 @@
+modelo,config,params,patch,descriptors,neighbors,aggregation,auc_sel,recall95_sel
+svm,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""nu"": 0.05}",24,hog+lbp+gabor+edges+shape,1,top3,0.975216,0.931034
+lof,P32-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""n_neighbors"": 10}",32,hog+lbp+gabor+edges+shape,1,top3,0.984375,0.931034
+isolation_forest,P24-lbp+gabor+edges+shape-z1-n1-top3,"{""max_samples"": 512, ""n_estimators"": 200}",24,lbp+gabor+edges+shape,1,top3,0.948006,0.775862

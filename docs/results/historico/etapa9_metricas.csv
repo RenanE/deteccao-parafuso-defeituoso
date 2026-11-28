@@ -1,0 +1,4 @@
+modelo,fn,fp,tp,tn,recall_defeitos,especificidade,auc_holdout,auc_reservadas_vs_defeitos_holdout
+svm,11,3,50,18,0.819672,0.857143,0.903201,0.934682
+lof,2,3,59,18,0.967213,0.857143,0.957845,0.985656
+isolation_forest,19,2,42,19,0.688525,0.904762,0.910226,0.923668
