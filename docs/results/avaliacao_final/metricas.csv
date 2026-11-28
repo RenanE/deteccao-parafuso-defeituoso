@@ -1,0 +1,6 @@
+modelo,config,params,threshold,calibration_fpr,tp,fn,tn,fp,recall_defeitos,especificidade,auc_holdout,auc_reservadas_vs_defeitos_holdout
+svm,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""nu"": 0.05}",3.405449435434655,0.046875,50,11,20,1,0.819672131147541,0.9523809523809523,0.9000780640124902,0.9344262295081966
+lof,P32-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""n_neighbors"": 10}",4.8906792004903155,0.046875,58,3,18,3,0.9508196721311475,0.8571428571428571,0.9555035128805621,0.985655737704918
+isolation_forest,P24-lbp+gabor+edges+shape-z1-n1-top3,"{""max_samples"": 512, ""n_estimators"": 200}",4.520210631018026,0.046875,42,19,21,0,0.6885245901639344,1.0,0.9125683060109289,0.915983606557377
+knn,P24-hog+lbp+gabor+edges+shape-z1-n2-top3,"{""aggregation"": ""mean"", ""metric"": ""euclidean"", ""n_neighbors"": 10}",4.479041124781003,0.046875,55,6,20,1,0.9016393442622951,0.9523809523809523,0.9578454332552693,0.9841188524590163
+mahalanobis,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""covariance"": ""ledoit_wolf""}",6.262524021463676,0.046875,50,11,19,2,0.819672131147541,0.9047619047619048,0.9141295862607338,0.9649077868852459

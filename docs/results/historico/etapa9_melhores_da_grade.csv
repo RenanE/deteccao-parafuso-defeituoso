@@ -1,0 +1,10 @@
+indice,model,config,params,auc_sel,recall95_sel
+57,lof,P32-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""n_neighbors"": 10}",0.984375,0.931034
+3,lof,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""n_neighbors"": 20}",0.982759,0.965517
+5,lof,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""n_neighbors"": 40}",0.982759,0.965517
+11,svm,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""nu"": 0.05}",0.975216,0.931034
+13,svm,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""nu"": 0.1}",0.971444,0.879310
+10,svm,P24-hog+lbp+gabor+edges+shape-z1-n1-max,"{""nu"": 0.05}",0.962823,0.896552
+37,isolation_forest,P24-lbp+gabor+edges+shape-z1-n1-top3,"{""max_samples"": 512, ""n_estimators"": 200}",0.948006,0.775862
+9,isolation_forest,P24-hog+lbp+gabor+edges+shape-z1-n1-top3,"{""max_samples"": 512, ""n_estimators"": 200}",0.943427,0.775862
+35,isolation_forest,P24-lbp+gabor+edges+shape-z1-n1-top3,"{""max_samples"": ""auto"", ""n_estimators"": 200}",0.941002,0.810345

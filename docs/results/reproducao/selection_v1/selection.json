@@ -1,0 +1,43 @@
+{
+  "selected": {
+    "svm": {
+      "config": "P24-hog+lbp+gabor+edges+shape-z1-n1-top3",
+      "params": "{\"nu\": 0.05}",
+      "patch": 24,
+      "descriptors": "hog+lbp+gabor+edges+shape",
+      "neighbors": 1,
+      "aggregation": "top3",
+      "auc_sel": 0.9744073275862069,
+      "recall95_sel": 0.9310344827586207
+    },
+    "lof": {
+      "config": "P32-hog+lbp+gabor+edges+shape-z1-n1-top3",
+      "params": "{\"n_neighbors\": 10}",
+      "patch": 32,
+      "descriptors": "hog+lbp+gabor+edges+shape",
+      "neighbors": 1,
+      "aggregation": "top3",
+      "auc_sel": 0.9841056034482758,
+      "recall95_sel": 0.9310344827586207
+    },
+    "isolation_forest": {
+      "config": "P24-lbp+gabor+edges+shape-z1-n1-top3",
+      "params": "{\"max_samples\": 512, \"n_estimators\": 200}",
+      "patch": 24,
+      "descriptors": "lbp+gabor+edges+shape",
+      "neighbors": 1,
+      "aggregation": "top3",
+      "auc_sel": 0.9480064655172413,
+      "recall95_sel": 0.7931034482758621
+    }
+  },
+  "rule": "Maior AUC (reservadas vs defeitos de seleção); desempate: recall a 95% de especificidade, depois menor dimensão.",
+  "split_signature": "270ef1feb7bdc7aa8069524081eb03163d5a159c70d9388abb60fb458c758d8f",
+  "roi_cache_sha256": "bbe59b12fdf50799c7b556dd531a995f2015d7005bda91eee26d45bcb26ef462",
+  "sources": {
+    "local_features.py": "d9608c8d1bf05abd211ffa21344437c9fb8771a14d074bffe9463192532bdf3c",
+    "stage9_experiments.py": "d99f241087e7c251066cce4c0eed1d2553f6a23c2e01ae05341140d1e878cd14"
+  },
+  "n_runs": 176,
+  "signature": "90204fbe9c7bfb6827df2d8fd14639497968e186443e78234a0f5eabb7bf353c"
+}

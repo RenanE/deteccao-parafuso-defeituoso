@@ -1,6 +1,8 @@
 # Pastas de dados pesados e modelos
 data/
 models/
+results/
+!/docs/results/
 
 # Aquivos de cache e ambientes virtuais
 __pycache__/
@@ -11,3 +13,10 @@ venv/
 # Modelos serializados e chckpoints
 *.pkl
 *.joblib
+vision/
+# Experimento neural e documentos temporarios locais
+/neural_networks/
+/Atualização do projeto.pdf
+/Detecção de Parafuso Defeituosos.pdf
+/roteiro_final.pdf
+/SESSION_NOTES.md

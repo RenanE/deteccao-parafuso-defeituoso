@@ -1,7 +1,58 @@
+from dataclasses import asdict, dataclass
+from numbers import Integral
+
 import cv2
 import numpy as np
 from skimage.feature import hog
 from skimage.measure import label, regionprops
+
+
+@dataclass(frozen=True)
+class HOGConfig:
+    """Varia somente células/orientações; resolução, blocos e norma preservados."""
+
+    pixels_per_cell: tuple[int, int] = (8, 8)
+    orientations: int = 9
+
+    def __post_init__(self):
+        if isinstance(self.orientations, bool) or not isinstance(self.orientations, Integral) or self.orientations < 1:
+            raise ValueError("orientations deve ser inteiro positivo.")
+        if not isinstance(self.pixels_per_cell, tuple) or len(self.pixels_per_cell) != 2:
+            raise ValueError("pixels_per_cell deve ser uma tupla (altura, largura).")
+        for size, cell in zip((128, 384), self.pixels_per_cell):
+            if isinstance(cell, bool) or not isinstance(cell, Integral) or cell < 1 or size % cell or size // cell < 2:
+                raise ValueError("Células devem dividir a ROI 128x384 e permitir blocos 2x2.")
+
+    @property
+    def hog_dimension(self):
+        h, w = self.pixels_per_cell
+        return (128 // h - 1) * (384 // w - 1) * 4 * self.orientations
+
+    @property
+    def total_dimension(self):
+        return self.hog_dimension + 33
+
+    def metadata(self):
+        return {
+            **asdict(self), "pixels_per_cell": list(self.pixels_per_cell), "roi_width_height": [384, 128],
+            "cells_per_block": [2, 2], "block_norm": "L1",
+            "hog_dimension": self.hog_dimension, "total_dimension": self.total_dimension,
+            "attribute_order": ["hog", "gabor", "bordas", "geometria"],
+            "blocks": {
+                "hog": [0, self.hog_dimension],
+                "gabor": [self.hog_dimension, self.hog_dimension + 24],
+                "bordas": [self.hog_dimension + 24, self.hog_dimension + 27],
+                "geometria": [self.hog_dimension + 27, self.total_dimension],
+            },
+        }
+
+
+HOG_CONFIGS = {
+    "A": HOGConfig(),
+    "B": HOGConfig((16, 16), 9),
+    "C": HOGConfig((16, 16), 6),
+    "D": HOGConfig((32, 32), 9),
+}
 
 
 def extrair_hog(
@@ -214,6 +265,8 @@ def extrair_todas_caracteristicas(
     roi_clahe: np.ndarray,
     roi_mascara: np.ndarray,
     banco_gabor: list[np.ndarray] = None,
+    *,
+    hog_config: HOGConfig | None = None,
 ) -> np.ndarray:
     """Concatena todas as características extraídas em um único vetor 1D:
     1. HoG (estrutura de gradientes locais)
@@ -227,11 +280,15 @@ def extrair_todas_caracteristicas(
             lambdas=[8.0, 12.0, 16.0]
         )
 
-    # 1. HoG
+    config = HOGConfig() if hog_config is None else hog_config
+    if not isinstance(config, HOGConfig):
+        raise ValueError("hog_config deve ser HOGConfig.")
+
+    # 1. HoG (configuração A continua sendo o padrão original)
     vetor_hog = extrair_hog(
         roi_clahe,
-        orientations=9,
-        pixels_per_cell=(8, 8),
+        orientations=config.orientations,
+        pixels_per_cell=config.pixels_per_cell,
         cells_per_block=(2, 2),
         visualize=False,
     )

@@ -1,0 +1,37 @@
+{
+  "selected": {
+    "knn": {
+      "config": "P24-hog+lbp+gabor+edges+shape-z1-n2-top3",
+      "params": "{\"aggregation\": \"mean\", \"metric\": \"euclidean\", \"n_neighbors\": 10}",
+      "patch": 24,
+      "descriptors": "hog+lbp+gabor+edges+shape",
+      "neighbors": 2,
+      "aggregation": "top3",
+      "auc_sel": 0.9827586206896551,
+      "recall95_sel": 0.9310344827586207
+    },
+    "mahalanobis": {
+      "config": "P24-hog+lbp+gabor+edges+shape-z1-n1-top3",
+      "params": "{\"covariance\": \"ledoit_wolf\"}",
+      "patch": 24,
+      "descriptors": "hog+lbp+gabor+edges+shape",
+      "neighbors": 1,
+      "aggregation": "top3",
+      "auc_sel": 0.9754849137931034,
+      "recall95_sel": 0.9137931034482759
+    }
+  },
+  "rule": "Maior AUC (reservadas vs defeitos de seleção); desempate: recall a 95% de especificidade, depois menor dimensão.",
+  "split_signature": "270ef1feb7bdc7aa8069524081eb03163d5a159c70d9388abb60fb458c758d8f",
+  "roi_cache_sha256": "bbe59b12fdf50799c7b556dd531a995f2015d7005bda91eee26d45bcb26ef462",
+  "sources": {
+    "local_features.py": "d0ae9de293e2a18290e6360973d141aba1fd967b7cbf3c080c769cd2822fcd26",
+    "stage9_experiments.py": "e0f71341bef059414edc9c2149ea19a8cbdc3387d5aa1475d2c7b01afe6d1558",
+    "anomaly.py": "926950870f3d0fbf9aae668f439b551667f8ae5ac3d759406bcaa68248ada901",
+    "knn.py": "0dbb46ab45c23a98b00464841d6a35b1342fb521141c58c48e920a600448ddfe",
+    "mahalanobis.py": "03626295ebc052a5483c77dadac436272827f55fdf77aa21444e065558bef46c"
+  },
+  "n_runs": 192,
+  "models_without_viable_config": [],
+  "signature": "0a09de04477533d1d2707aab08f4c5fb717a8523cdacace6a5f2fa3d0733ffb7"
+}

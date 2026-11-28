@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pôster A3: Inspeção Clássica de Parafusos</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Pôster A3 retrato (297 x 420 mm), tema único claro para impressão. */
+@page { size: 297mm 420mm; margin: 0; }
+:root {
+  --paper: #ffffff; --ink: #1b222b; --muted: #55606d; --line: #d5dae0;
+  --steel: #2f5d86; --steel-dark: #1d3d5c; --steel-soft: #e6eef6; --rust: #b5482f; --rust-soft: #f7e6e0; --ok: #2f7a45; --ok-soft: #e4f1e8;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", Arial, sans-serif;
+  --mono: "IBM Plex Mono", Menlo, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 297mm; height: 420mm; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 10pt; line-height: 1.38; }
+.poster { width: 297mm; height: 420mm; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
+header { background: var(--steel-dark); color: #ffffff; padding: 9mm 16mm 8mm; display: grid; grid-template-columns: 1fr auto; gap: 10mm; align-items: end; }
+header .eyebrow { font-family: var(--mono); font-size: 10pt; letter-spacing: .14em; text-transform: uppercase; color: #a9c6e3; }
+header h1 { font-family: var(--display); font-weight: 500; font-size: 44pt; line-height: 1.02; margin-top: 3mm; letter-spacing: -.01em; }
+header p.sub { font-size: 13pt; color: #d4e2ef; margin-top: 2.5mm; max-width: 185mm; }
+header .authors { font-family: var(--mono); font-size: 10.5pt; color: #d4e2ef; text-align: right; line-height: 1.7; }
+main { padding: 7mm 16mm 0; display: grid; grid-template-columns: 1fr 1fr 1fr; align-content: start; gap: 6mm 9mm; min-height: 0; }
+.block { display: flex; flex-direction: column; gap: 2.6mm; min-width: 0; }
+.span2 { grid-column: span 2; }
+.wide { grid-column: 1 / -1; }
+h2 { font-family: var(--display); font-weight: 500; font-size: 18pt; line-height: 1.1; color: var(--steel-dark); display: flex; gap: 3mm; align-items: baseline; }
+h2 .n { font-family: var(--mono); font-size: 11pt; color: var(--rust); }
+h3 { font-family: var(--display); font-weight: 500; font-size: 12.5pt; }
+p, li { font-size: 10pt; }
+ul { padding-left: 4.5mm; display: flex; flex-direction: column; gap: 1.4mm; }
+img { display: block; width: 100%; height: auto; }
+.cap { font-size: 8.6pt; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 9.4pt; }
+th { font-family: var(--mono); font-weight: 400; font-size: 7.6pt; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); text-align: right; padding: 1.3mm 1.4mm; border-bottom: 1px solid var(--ink); }
+th:first-child, td:first-child { text-align: left; white-space: nowrap; }
+td { text-align: right; padding: 1.2mm 1.4mm; border-bottom: 1px solid var(--line); }
+tr.win td { background: var(--steel-soft); }
+.versus { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+.side { border: 1px solid var(--line); padding: 2.6mm 3.4mm; display: flex; flex-direction: column; gap: 1.4mm; }
+.side.old { border-top: 1.6mm solid var(--rust); }
+.side.new { border-top: 1.6mm solid var(--ok); }
+.side .k { font-family: var(--mono); font-size: 7.8pt; letter-spacing: .08em; color: var(--muted); }
+.steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.4mm; }
+.step { border: 1px solid var(--line); padding: 2mm 2.6mm; }
+.step .k { font-family: var(--mono); font-size: 7.6pt; color: var(--steel); letter-spacing: .06em; }
+.step p { font-size: 8.8pt; }
+.diag { display: grid; grid-template-columns: auto 1fr; gap: 1mm 3mm; font-size: 9.2pt; font-variant-numeric: tabular-nums; }
+.bar { height: 3.2mm; background: var(--steel); align-self: center; }
+.bar.low { background: var(--rust); }
+.note { background: var(--rust-soft); padding: 2.6mm 3.6mm; border-left: 1.6mm solid var(--rust); }
+.big { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+.stat { border: 1px solid var(--line); border-left: 2.6mm solid var(--ok); padding: 2.6mm 3.6mm; }
+.stat.bad { border-left-color: var(--rust); }
+.stat .num { font-family: var(--display); font-size: 20pt; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .lbl { font-size: 8.8pt; color: var(--muted); margin-top: 1.2mm; }
+.block.conclusion { display: grid; grid-template-columns: 1fr 2fr; gap: 9mm; align-items: center; border-top: 1px solid var(--line); padding-top: 5mm; }
+footer { padding: 4mm 16mm 6mm; display: flex; justify-content: space-between; gap: 8mm; font-size: 8pt; color: var(--muted); border-top: 1px solid var(--line); margin-top: 5mm; }
+</style>
+</head>
+<body>
+<div class="poster">
+<header>
+  <div>
+    <div class="eyebrow">Visão computacional clássica · Detecção de anomalias industriais</div>
+    <h1>Inspeção Clássica de Parafusos</h1>
+    <p class="sub">SVM, LOF e Isolation Forest treinados só com parafusos bons. Trocar um vetor global por descritores locais levou o LOF de 53 para 2 defeitos aprovados.</p>
+  </div>
+  <div class="authors">Felipe Bertella<br>Gabriela Costa<br>Renan Bianchi</div>
+</header>
+
+<main>
+  <section class="block">
+    <h2><span class="n">01</span>Problema e dados</h2>
+    <p>Quase todas as peças de uma linha são boas e cada defeito é diferente. Os modelos aprendem só o normal (One-Class) e precisam reconhecer defeitos que nunca viram. Meta: minimizar defeitos aprovados.</p>
+    <img src="../relatorio/img/categories_roi.png" alt="">
+    <p class="cap">MVTec AD, categoria screw. Treino: 320 boas (256 para ajuste, 64 para o limiar). Teste: 41 boas e 119 defeituosas em 5 tipos.</p>
+  </section>
+
+  <section class="block span2">
+    <h2><span class="n">02</span>Segmentar e alinhar</h2>
+    <img src="../relatorio/img/pipeline_steps.png" alt="">
+    <p class="cap">Cinza, CLAHE, Otsu, morfologia, ROI alinhada (cabeça à esquerda, 384 x 128) e HOG.</p>
+    <p>O alinhamento é a base de tudo: a mesma posição da ROI corresponde sempre à mesma parte do parafuso (cabeça, pescoço, rosca, ponta).</p>
+  </section>
+
+  <section class="block">
+    <h2><span class="n">03</span>Vetor global: acaso</h2>
+    <p>Primeira versão: 25.413 atributos por parafuso (HOG, Gabor, bordas, geometria) no teste completo.</p>
+    <table>
+      <thead><tr><th>Modelo global</th><th>FN /119</th><th>AUC</th></tr></thead>
+      <tbody>
+        <tr><td>Isolation Forest</td><td>100</td><td>0,63</td></tr>
+        <tr><td>LOF</td><td>104</td><td>0,62</td></tr>
+        <tr><td>One-Class SVM</td><td>110</td><td>0,44</td></tr>
+      </tbody>
+    </table>
+    <h3>Diagnóstico: AUC por bloco (LOF)</h3>
+    <div class="diag">
+      <span>HOG global (99,9% do vetor)</span><div class="bar low" style="width:48%"></div>
+      <span>Gabor (24 atributos)</span><div class="bar" style="width:72%"></div>
+      <span>Bordas (3)</span><div class="bar" style="width:61%"></div>
+      <span>Geometria (6)</span><div class="bar" style="width:57%"></div>
+    </div>
+    <p class="cap">Barras de 0 a 1; 0,5 é o acaso. O HOG global, 0,48, domina o vetor e afoga os blocos que têm sinal. Defeitos pequenos se diluem na variação normal da peça inteira.</p>
+  </section>
+
+  <section class="block span2">
+    <h2><span class="n">04</span>Descritores locais: comparar região por região</h2>
+    <div class="versus">
+      <div class="side old"><span class="k">ANTES · GLOBAL</span><p>Um vetor por parafuso. O detector compara a peça inteira; o defeito se dilui.</p></div>
+      <div class="side new"><span class="k">DEPOIS · LOCAL</span><p>Um detector por posição da grade compara cada região só com a mesma região das boas.</p></div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="k">GRADE</span><p>Patches de 24 a 48 px sobre a ROI alinhada, brilho normalizado.</p></div>
+      <div class="step"><span class="k">DESCRITOR</span><p>HOG, LBP, Gabor, bordas e silhueta: cerca de 60 números.</p></div>
+      <div class="step"><span class="k">DETECTOR</span><p>SVM, LOF ou Isolation Forest por posição, com vizinhas.</p></div>
+      <div class="step"><span class="k">DECISÃO</span><p>Média dos 3 patches mais anômalos.</p></div>
+    </div>
+    <p>Protocolo: como o teste já tinha sido visto, ele foi dividido antes dos experimentos. As 168 combinações foram escolhidas com metade dos defeitos (contra as 64 boas reservadas); a outra metade e 21 boas formam um holdout usado uma única vez. Na ablação, o mesmo HOG que valia 0,48 no vetor global chega a 0,916 por patch: o ganho vem da localidade.</p>
+    <img src="../relatorio/img/local_maps_lof_grid.png" alt="" style="width:74%">
+    <p class="cap">Mapas do LOF local no holdout, com o score de cada parafuso (limiar 4,9): a marcação cai sobre a ponta, a cabeça, o pescoço e os filetes danificados.</p>
+  </section>
+
+  <section class="block">
+    <h2><span class="n">05</span>Resultado no holdout</h2>
+    <table>
+      <thead><tr><th>Modelo</th><th>FN antes</th><th>FN agora</th><th>FP agora</th><th>AUC agora</th></tr></thead>
+      <tbody>
+        <tr class="win"><td>LOF</td><td>53</td><td>2</td><td>3</td><td>0,958</td></tr>
+        <tr><td>SVM</td><td>57</td><td>11</td><td>3</td><td>0,903</td></tr>
+        <tr><td>Isol. Forest</td><td>54</td><td>19</td><td>2</td><td>0,910</td></tr>
+      </tbody>
+    </table>
+    <p class="cap">FN: defeito aprovado (de 61). FP: boa rejeitada (de 21). Antes: modelos globais nas mesmas imagens.</p>
+    <img src="../relatorio/img/recall_by_category_holdout.png" alt="">
+  </section>
+
+  <section class="block">
+    <h2><span class="n">06</span>Curvas ROC</h2>
+    <img src="../relatorio/img/roc_holdout.png" alt="">
+    <p class="cap">Tracejado: vetor global, perto da diagonal. Contínuo: local, com a mesma cor por detector.</p>
+  </section>
+
+  <section class="block">
+    <h2><span class="n">07</span>Conclusão</h2>
+    <div class="big">
+      <div class="stat"><div class="num">59/61</div><div class="lbl">detectados: LOF local</div></div>
+      <div class="stat bad"><div class="num">8/61</div><div class="lbl">detectados: LOF global</div></div>
+    </div>
+    <ul>
+      <li>Modelo escolhido: LOF com descritores locais. Detecta 59 de 61 defeitos do holdout e rejeita 3 de 21 boas, só com visão clássica e 256 imagens boas.</li>
+      <li>Para defeitos pequenos, a representação importa mais que o detector: os mesmos três detectores saíram do acaso para AUC acima de 0,9.</li>
+      <li>Cuidados: as boas do teste são mais escuras (viés do dataset) e nunca entraram na seleção; o holdout é pequeno (82 imagens).</li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <span>Dados: MVTec Anomaly Detection Dataset (screw), CC BY-NC-SA 4.0. Detectores: scikit-learn. Descritores: scikit-image e OpenCV.</span>
+  <span>Código, protocolo e resultados reproduzíveis no repositório do projeto.</span>
+</footer>
+</div>
+</body>
+</html>

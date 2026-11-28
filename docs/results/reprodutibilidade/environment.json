@@ -1,0 +1,21 @@
+{
+  "python": "3.12.8",
+  "platform": "Windows-10-10.0.19044-SP0",
+  "packages": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "scikit-image": "0.26.0",
+    "opencv-python": "5.0.0.93",
+    "scikit-learn": "1.9.1",
+    "pandas": "3.0.6",
+    "threadpoolctl": "3.7.0"
+  },
+  "extraction_sources": {
+    "features.py": "dc2d898e1c47c067755dc8834282f578fdd949411c1ffd170d239833603d700f",
+    "preprocessing.py": "c216ab5e80060d1ba653932b92aa85d11d9594b556506fdfbf2ee47177a0cd1a",
+    "segmentation.py": "485552ea299ca2f9eb1762183fb585f743ec679ba03756aff9e8d41aae1f5f9b",
+    "extract_features.py": "cce1bc1665a9fc8cb52a5dee3bf2e7dc745e293096fa3e155e74b0eb5f1731ed"
+  },
+  "experiment_source": "415b8713c9cbe11d559a20241d67c83607a2515b1935185ea5411ded475fa837",
+  "representation_source": "1b841e00a2f3e0a79ecfa791f093900fd0399a91170e5cffa12ecdcadfd3f1d5"
+}

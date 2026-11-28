@@ -1,28 +1,38 @@
+import argparse
+from contextlib import ExitStack
 from pathlib import Path
 import cv2
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-# Importações dos módulos do projeto
-from features import criar_banco_gabor, extrair_todas_caracteristicas
-from preprocessing import aplicar_clahe, converter_para_cinza, remover_ruido
-from segmentation import aplicar_morfologia, binarizar_otsu, extrair_maior_componente_e_roi
+# Suporta tanto python -m src.extract_features quanto execução como script.
+if __package__:
+    from .dataset import DatasetInvalidoError, adicionar_argumento_confirmacao, carregar_caminhos_dataset, ler_imagem, resolver_data_dir
+    from .features import criar_banco_gabor, extrair_todas_caracteristicas
+    from .preprocessing import aplicar_clahe, converter_para_cinza, remover_ruido
+    from .segmentation import aplicar_morfologia, binarizar_otsu, extrair_maior_componente_e_roi
+else:
+    from dataset import DatasetInvalidoError, adicionar_argumento_confirmacao, carregar_caminhos_dataset, ler_imagem, resolver_data_dir
+    from features import criar_banco_gabor, extrair_todas_caracteristicas
+    from preprocessing import aplicar_clahe, converter_para_cinza, remover_ruido
+    from segmentation import aplicar_morfologia, binarizar_otsu, extrair_maior_componente_e_roi
+
+
+TAMANHO_VETOR_ESPERADO = 25413
 
 def processar_imagem(
     caminho_img: Path,
-    banco_gabor: list[np.ndarray]
+    banco_gabor: list[np.ndarray],
+    *,
+    hog_config=None,
 ) -> tuple[np.ndarray, bool]:
     """
     Aplica o pipeline completo da Milestone 2 (pré-processamento/ROI) e extrai o vetor unificado de características.
     """
     
-    # Lê o arquivo em bytes preservando caminhos com acentos/caracteres especiais no Windows
-    dados_img = np.fromfile(str(caminho_img), dtype=np.uint8)
-    img_bgr = cv2.imdecode(dados_img, cv2.IMREAD_COLOR)
-
-    if img_bgr is None:
-        return None, False
+    # Mesmo decodificador usado pela validação, incluindo caminhos Unicode.
+    img_bgr = ler_imagem(caminho_img)
 
     # Pipeline Milestone 2
     cinza = converter_para_cinza(img_bgr)
@@ -56,89 +66,83 @@ def processar_imagem(
     vetor = extrair_todas_caracteristicas(
         roi_clahe,
         roi_mascara,
-        banco_gabor=banco_gabor
+        banco_gabor=banco_gabor,
+        hog_config=hog_config,
     )
 
     return vetor, True
 
-def executar_extracao_lote():
-    # Diretórios base
+def executar_extracao_lote(data_dir=None, *, train_flat_is_good=None):
+    """Valida ambos os splits antes de processar e nunca sobrescreve CSVs.
+
+    Nenhum CSV é publicado se uma imagem falhar ou produzir vetor inválido.
+    """
     base_dir = Path(__file__).resolve().parent.parent
-    data_dir = base_dir / "data"
+    data_dir = resolver_data_dir(data_dir).resolve()
     out_dir = data_dir / "processed"
+    destinos = {split: out_dir / f"features_{split}.csv" for split in ("train", "test")}
+    for destino in destinos.values():
+        # Inclui links simbólicos quebrados para impedir substituição acidental.
+        if destino.exists() or destino.is_symlink():
+            raise FileExistsError(f"CSV já existente; nada será sobrescrito: {destino}")
 
+    dataset = carregar_caminhos_dataset(data_dir, train_flat_is_good=train_flat_is_good)
+    if dataset.empty or set(dataset["split"]) != {"train", "test"}:
+        raise DatasetInvalidoError("Treino e teste devem conter imagens validadas.")
+    if not dataset.loc[dataset["split"] == "train", "classe"].eq("good").all():
+        raise DatasetInvalidoError("Classe inesperada no treino. Somente 'good' é permitida.")
+
+    banco_gabor = criar_banco_gabor(orientations=4, lambdas=[8.0, 12.0, 16.0])
+    linhas = {"train": [], "test": []}
+    for amostra in tqdm(dataset.itertuples(index=False), total=len(dataset), desc="Extração"):
+        img_path = Path(amostra.caminho)
+        try:
+            vetor, ok = processar_imagem(img_path, banco_gabor)
+        except (ValueError, OSError, cv2.error) as exc:
+            raise DatasetInvalidoError(f"Falha ao processar {img_path}: {exc}") from exc
+        if not ok or vetor is None:
+            raise DatasetInvalidoError(f"Falha ao extrair características: {img_path}")
+        vetor = np.asarray(vetor)
+        if vetor.shape != (TAMANHO_VETOR_ESPERADO,) or not np.isfinite(vetor).all():
+            raise DatasetInvalidoError(f"Vetor inválido em {img_path}: esperado {TAMANHO_VETOR_ESPERADO} atributos finitos.")
+        caminho = img_path.relative_to(base_dir) if img_path.is_relative_to(base_dir) else img_path
+        linha = {"caminho": str(caminho), "classe": amostra.classe, "split": amostra.split}
+        linha.update({f"feat_{idx}": val for idx, val in enumerate(vetor)})
+        linhas[amostra.split].append(linha)
+
+    tabelas = {split: pd.DataFrame(itens) for split, itens in linhas.items()}
     out_dir.mkdir(parents=True, exist_ok=True)
-
-    # Inicializa o banco de Gabor global (reutilizado em todas as imagens)
-    banco_gabor = criar_banco_gabor(
-        orientations=4,
-        lambdas=[8.0, 12.0, 16.0]
-    )
-
-    print("==================================================")
-    print(" EXTRAÇÃO EM LOTE DE CARACTERÍSTICAS ")
-    print("==================================================\n")
-
-    # ---------------------------------------------------------
-    # 1. PROCESSAMENTO DO TREINO (data/train/*.png -> classe 'good')
-    # ---------------------------------------------------------
-    train_dir = data_dir / "train"
-    imagens_train = sorted(list(train_dir.glob("*.png")))
-    print(f"[1/2] Processando pasta de Treino: {len(imagens_train)} imagens (.png)")
-
-    linhas_train = []
-    for img_path in tqdm(imagens_train, desc="Treino (good)"):
-        vetor, ok = processar_imagem(img_path, banco_gabor)
-
-        if ok:
-            dict_linha = {
-                "caminho": str(img_path.relative_to(base_dir)),
-                "classe": "good",
-                "split": "train",
-            }
-
-            for idx, val in enumerate(vetor):
-                dict_linha[f"feat_{idx}"] = val
-            linhas_train.append(dict_linha)
-
-    df_train = pd.DataFrame(linhas_train)
-    caminho_csv_train = out_dir / "features_train.csv"
-    df_train.to_csv(caminho_csv_train, index=False)
-    print( f"-> Treino salvo em: {caminho_csv_train} ({len(df_train)} amostras)\n")
+    criados = []
+    try:
+        with ExitStack() as stack:
+            arquivos = {}
+            for split, destino in destinos.items():
+                # Criação exclusiva também protege contra arquivos surgidos durante a extração.
+                arquivos[split] = stack.enter_context(destino.open("x", encoding="utf-8", newline=""))
+                criados.append(destino)
+            for split, tabela in tabelas.items():
+                tabela.to_csv(arquivos[split], index=False)
+    except BaseException:
+        # Remove apenas saídas novas desta execução, nunca imagens ou CSVs anteriores.
+        for destino in criados:
+            destino.unlink()
+        raise
+    for split, destino in destinos.items():
+        print(f"Características salvas: {destino} ({len(tabelas[split])} amostras)")
+    return destinos
 
 
-    # ---------------------------------------------------------
-    # 2. PROCESSAMENTO DO TESTE (data/test/<categoria>/*.png)
-    # ---------------------------------------------------------
-    test_dir = data_dir / "test"
-    imagens_test = sorted(list(test_dir.rglob("*.png")))
-    print(f"[2/2] Processando pasta de Teste: {len(imagens_test)} imagens")
-
-    linhas_test = []
-    for img_path in tqdm(imagens_test, desc="Teste (todas as categorias)"):
-        categoria = img_path.parent.name
-        vetor, ok = processar_imagem(img_path, banco_gabor)
-
-        if ok:
-            dict_linha = {
-                "caminho": str(img_path.relative_to(base_dir)),
-                "classe": categoria,
-                "split": "test",
-            }
-
-            for idx, val in enumerate(vetor):
-                dict_linha[f"feat_{idx}"] = val
-            linhas_test.append(dict_linha)
-
-    df_test = pd.DataFrame(linhas_test)
-    caminho_csv_test = out_dir / "features_test.csv"
-    df_test.to_csv(caminho_csv_test, index=False)
-    print(f"-> Teste salvo em: {caminho_csv_test} ({len(df_test)} amostras)\n")
-
-    print("==================================================")
-    print(" EXTRAÇÃO CONCLUÍDA! ARQUIVOS SALVOS EM data/processed/")
-    print("==================================================")
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Extrai características de PNGs validados, sem sobrescrever CSVs.")
+    parser.add_argument("--data-dir", type=Path, help="Prioridade: --data-dir > DATASET_DIR > data/ na raiz do projeto.")
+    adicionar_argumento_confirmacao(parser)
+    args = parser.parse_args(argv)
+    try:
+        executar_extracao_lote(args.data_dir, train_flat_is_good=args.train_flat_is_good)
+    except (DatasetInvalidoError, OSError) as exc:
+        parser.exit(1, f"Extração interrompida: {exc}\n")
+    return 0
 
 
 if __name__ == "__main__":
-    executar_extracao_lote()
+    raise SystemExit(main())

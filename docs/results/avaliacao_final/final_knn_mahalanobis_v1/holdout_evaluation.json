@@ -1,0 +1,79 @@
+{
+  "selection_signature": "0a09de04477533d1d2707aab08f4c5fb717a8523cdacace6a5f2fa3d0733ffb7",
+  "n_holdout_goods": 21,
+  "n_holdout_defects": 61,
+  "results": {
+    "knn": {
+      "config": "P24-hog+lbp+gabor+edges+shape-z1-n2-top3",
+      "params": "{\"aggregation\": \"mean\", \"metric\": \"euclidean\", \"n_neighbors\": 10}",
+      "threshold": 4.479041124781003,
+      "calibration_fpr": 0.046875,
+      "tp": 55,
+      "fn": 6,
+      "tn": 20,
+      "fp": 1,
+      "recall_defeitos": 0.9016393442622951,
+      "especificidade": 0.9523809523809523,
+      "auc_holdout": 0.9578454332552693,
+      "auc_reservadas_vs_defeitos_holdout": 0.9841188524590163,
+      "por_categoria": {
+        "manipulated_front": {
+          "n": 12,
+          "detectados": 12
+        },
+        "scratch_head": {
+          "n": 12,
+          "detectados": 10
+        },
+        "scratch_neck": {
+          "n": 13,
+          "detectados": 13
+        },
+        "thread_side": {
+          "n": 12,
+          "detectados": 9
+        },
+        "thread_top": {
+          "n": 12,
+          "detectados": 11
+        }
+      }
+    },
+    "mahalanobis": {
+      "config": "P24-hog+lbp+gabor+edges+shape-z1-n1-top3",
+      "params": "{\"covariance\": \"ledoit_wolf\"}",
+      "threshold": 6.262524021463676,
+      "calibration_fpr": 0.046875,
+      "tp": 50,
+      "fn": 11,
+      "tn": 19,
+      "fp": 2,
+      "recall_defeitos": 0.819672131147541,
+      "especificidade": 0.9047619047619048,
+      "auc_holdout": 0.9141295862607338,
+      "auc_reservadas_vs_defeitos_holdout": 0.9649077868852459,
+      "por_categoria": {
+        "manipulated_front": {
+          "n": 12,
+          "detectados": 12
+        },
+        "scratch_head": {
+          "n": 12,
+          "detectados": 6
+        },
+        "scratch_neck": {
+          "n": 13,
+          "detectados": 13
+        },
+        "thread_side": {
+          "n": 12,
+          "detectados": 11
+        },
+        "thread_top": {
+          "n": 12,
+          "detectados": 8
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "selection_signature": "90204fbe9c7bfb6827df2d8fd14639497968e186443e78234a0f5eabb7bf353c",
+  "n_holdout_goods": 21,
+  "n_holdout_defects": 61,
+  "results": {
+    "svm": {
+      "config": "P24-hog+lbp+gabor+edges+shape-z1-n1-top3",
+      "params": "{\"nu\": 0.05}",
+      "threshold": 3.405449435434655,
+      "calibration_fpr": 0.046875,
+      "tp": 50,
+      "fn": 11,
+      "tn": 20,
+      "fp": 1,
+      "recall_defeitos": 0.819672131147541,
+      "especificidade": 0.9523809523809523,
+      "auc_holdout": 0.9000780640124902,
+      "auc_reservadas_vs_defeitos_holdout": 0.9344262295081966,
+      "por_categoria": {
+        "manipulated_front": {
+          "n": 12,
+          "detectados": 12
+        },
+        "scratch_head": {
+          "n": 12,
+          "detectados": 10
+        },
+        "scratch_neck": {
+          "n": 13,
+          "detectados": 13
+        },
+        "thread_side": {
+          "n": 12,
+          "detectados": 6
+        },
+        "thread_top": {
+          "n": 12,
+          "detectados": 9
+        }
+      }
+    },
+    "lof": {
+      "config": "P32-hog+lbp+gabor+edges+shape-z1-n1-top3",
+      "params": "{\"n_neighbors\": 10}",
+      "threshold": 4.8906792004903155,
+      "calibration_fpr": 0.046875,
+      "tp": 58,
+      "fn": 3,
+      "tn": 18,
+      "fp": 3,
+      "recall_defeitos": 0.9508196721311475,
+      "especificidade": 0.8571428571428571,
+      "auc_holdout": 0.9555035128805621,
+      "auc_reservadas_vs_defeitos_holdout": 0.985655737704918,
+      "por_categoria": {
+        "manipulated_front": {
+          "n": 12,
+          "detectados": 12
+        },
+        "scratch_head": {
+          "n": 12,
+          "detectados": 12
+        },
+        "scratch_neck": {
+          "n": 13,
+          "detectados": 12
+        },
+        "thread_side": {
+          "n": 12,
+          "detectados": 11
+        },
+        "thread_top": {
+          "n": 12,
+          "detectados": 11
+        }
+      }
+    },
+    "isolation_forest": {
+      "config": "P24-lbp+gabor+edges+shape-z1-n1-top3",
+      "params": "{\"max_samples\": 512, \"n_estimators\": 200}",
+      "threshold": 4.520210631018026,
+      "calibration_fpr": 0.046875,
+      "tp": 42,
+      "fn": 19,
+      "tn": 21,
+      "fp": 0,
+      "recall_defeitos": 0.6885245901639344,
+      "especificidade": 1.0,
+      "auc_holdout": 0.9125683060109289,
+      "auc_reservadas_vs_defeitos_holdout": 0.915983606557377,
+      "por_categoria": {
+        "manipulated_front": {
+          "n": 12,
+          "detectados": 12
+        },
+        "scratch_head": {
+          "n": 12,
+          "detectados": 6
+        },
+        "scratch_neck": {
+          "n": 13,
+          "detectados": 12
+        },
+        "thread_side": {
+          "n": 12,
+          "detectados": 4
+        },
+        "thread_top": {
+          "n": 12,
+          "detectados": 8
+        }
+      }
+    }
+  }
+}

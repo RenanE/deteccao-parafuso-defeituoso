@@ -1,7 +1,13 @@
 opencv-python
+numpy
+scipy
 scikit-image
 matplotlib
 pandas
 scikit-learn
-tdqm
+tqdm
 seaborn
+joblib
+jupyterlab
+ipykernel
+threadpoolctl
